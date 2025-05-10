@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Investor Relations - PRIME FARMS Ltd Admin</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/@themesberg/flowbite@1.7.1/dist/flowbite.min.css" />
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+        }
+        /* Short Hamburger Button Styles */
+        #hamburger {
+            width: 45px;
+            padding: 6px;
+            flex-direction: column;
+            justify-content: space-around;
+            cursor: pointer;
+        }
+        #hamburger span {
+            width: 100%;
+            height: 2px;
+            background-color: white;
+            transition: all 0.3s ease;
+            border-radius: 2px;
+        }
+        .line {
+            transition: all 0.3s ease-in-out;
+        }
+        .open .line-1 {
+            transform: rotate(45deg) translateY(0.4rem);
+        }
+        .open .line-2 {
+            opacity: 0;
+        }
+        .open .line-3 {
+            transform: rotate(-45deg) translateY(-0.4rem);
+        }
+        #mobileMenu {
+            position: absolute;
+            top: 60px;
+            left: 0;
+            width: 100%;
+            background-color: #007bff;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            z-index: 50;
+        }
+        #mobileMenu a {
+            color: white;
+            padding: 12px 16px;
+            display: block;
+            text-decoration: none;
+        }
+        #mobileMenu a:hover {
+            background-color: #0056b3;
+        }
+        /* Loading Spinner Styles */
+        .loader {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #3498db;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            animation: spin 2s linear infinite;
+            margin: 0 auto;
+            margin-top: 10px;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .form-section {
+            background-color: white;
+            border-radius: 0.5rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .form-section h2 {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #1e293b;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.875rem;
+            color: #374151;
+            margin-bottom: 0.5rem;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0.75rem;
+            border-radius: 0.375rem;
+            border: 1px solid #d1d5db;
+            font-size: 1rem;
+            color: #4b5563;
+            outline: none;
+            transition: border-color 0.15s ease-in-out, shadow-sm 0.15s ease-in-out;
+        }
+
+        .form-control:focus {
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .btn-primary {
+            background-color: #3b82f6;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.375rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.2s ease-in-out;
+            border: none;
+            font-size: 1rem;
+        }
+
+        .btn-primary:hover {
+            background-color: #2563eb;
+        }
+
+        .btn-secondary {
+            background-color: #e5e7eb;
+            color: #374151;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.375rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.2s ease-in-out;
+            border: none;
+            font-size: 1rem;
+            margin-left: 0.5rem;
+        }
+
+        .btn-secondary:hover {
+            background-color: #d1d5db;
+        }
+
+        .text-right {
+            text-align: right;
+        }
+
+        #report-container {
+            margin-top: 2rem;
+            padding: 1.5rem;
+            background-color: white;
+            border-radius: 0.5rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        #report-container h3 {
+            font-size: 1.25rem;
+            font-weight: bold;
+            color: #1e293b;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        #report-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+
+        #report-table thead th {
+            padding: 0.75rem;
+            background-color: #f3f4f6;
+            color: #6b7280;
+            font-weight: 500;
+            text-align: left;
+            border-bottom: 1px solid #d1d5db;
+        }
+
+        #report-table tbody td {
+            padding: 0.75rem;
+            color: #4b5563;
+            border-bottom: 1px solid #d1d5db;
+        }
+
+        #report-table tbody tr:nth-child(odd) {
+            background-color: #f9fafb;
+        }
+
+        #report-table tfoot td {
+            padding: 0.75rem;
+            color: #1e293b;
+            font-weight: bold;
+            text-align: left;
+        }
+        #report-table tfoot td:last-child{
+            text-align: right;
+        }
+
+        .mt-4 {
+            margin-top: 1rem;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .error-message {
+            color: #dc2626;
+            font-size: 0.875rem;
+            margin-top: 0.5rem;
+        }
+        .card {
+            background-color: white;
+            border-radius: 0.5rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .card-title {
+            font-size: 1.25rem;
+            font-weight: bold;
+            color: #1e293b;
+            margin-bottom: 1rem;
+        }
+
+        .table-container {
+            overflow-x: auto;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            border-spacing: 0;
+            min-width: 800px;
+        }
+
+        .data-table thead th {
+            background-color: #f3f4f6;
+            color: #6b7280;
+            text-align: left;
+            padding: 0.75rem 1rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+            border-bottom: 1px solid #d1d5db;
+        }
+
+        .data-table tbody td {
+            color: #4b5563;
+            padding: 0.75rem 1rem;
+            font-size: 0.9rem;
+            border-bottom: 1px solid #d1d5db;
+        }
+
+        .data-table tbody tr:hover {
+            background-color: #f9fafb;
+        }
+
+        .data-table tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .btn-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.5rem;
+            border-radius: 0.375rem;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.2s ease-in-out;
+            border: none;
+        }
+
+        .btn-icon:hover {
+            opacity: 0.8;
+        }
+
+        .btn-icon.edit {
+            background-color: #f0fdf4;
+            color: #22c55e;
+        }
+
+        .btn-icon.edit:hover {
+            background-color: #ecfdf5;
+        }
+
+        .btn-icon.delete {
+            background-color: #fef2f2;
+            color: #ef4444;
+        }
+
+        .btn-icon.delete:hover {
+            background-color: #fee2e2;
+        }
+
+        .form-select {
+            width: 100%;
+            padding: 0.75rem;
+            border-radius: 0.375rem;
+            border: 1px solid #d1d5db;
+            font-size: 1rem;
+            color: #4b5563;
+            outline: none;
+            transition: border-color 0.15s ease-in-out, shadow-sm 0.15s ease-in-out;
+            background-color: white;
+        }
+
+        .form-select:focus {
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .date-range-input {
+            display: flex;
+            gap: 0.5rem;
+            width: 100%;
+        }
+
+        .date-range-input input {
+            flex: 1;
+            padding: 0.75rem;
+            border-radius: 0.375rem;
+            border: 1px solid #d1d5db;
+            font-size: 1rem;
+            color: #4b5563;
+            outline: none;
+            transition: border-color 0.15s ease-in-out, shadow-sm 0.15s ease-in-out;
+        }
+
+        .date-range-input input:focus {
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        /* Style for meeting time slots */
+        .time-slots {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+        }
+        .time-slot {
+            padding: 0.5rem;
+            border-radius: 0.375rem;
+            background-color: #e5e7eb;
+            color: #374151;
+            text-align: center;
+            cursor: pointer;
+            transition: background-color 0.2s ease-in-out;
+            font-size: 0.875rem;
+            border: 1px solid #d1d5db;
+        }
+
+        .time-slot:hover {
+            background-color: #d1d5db;
+        }
+
+        .time-slot.selected {
+            background-color: #3b82f6;
+            color: white;
+            border-color: #3b82f6;
+        }
+
+        .meeting-details {
+            margin-top: 1rem;
+            padding: 1rem;
+            background-color: #f7fafc;
+            border-radius: 0.375rem;
+            border: 1px solid #e2e8f0;
+        }
+
+        .meeting-details h4 {
+            font-size: 1rem;
+            font-weight: bold;
+            color: #1e293b;
+            margin-bottom: 0.5rem;
+        }
+
+        .meeting-details p {
+            font-size: 0.9rem;
+            color: #4b5563;
+        }
+
+    </style>
+</head>
+<body class="bg-gray-100 min-h-screen flex flex-col">
+    <header class="bg-gray-800 shadow-md w-full fixed top-0 left-0 z-50">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <img src="logo.png" alt="PRIME FARMS Ltd" class="h-10 w-10 rounded-full border-2 border-blue-400 shadow-sm" />
+                <h1 class="text-2xl font-extrabold text-white tracking-wide">PRIME FARMS Ltd - Admin</h1>
+            </div>
+            <div class="hidden md:flex space-x-6">
+                <a href="index.html" class="text-gray-300 font-medium hover:text-white transition">Home</a>
+                <a href="accounting.html" class="text-gray-300 font-medium hover:text-white transition">Accounting</a>
+                <a href="inventory.html" class="text-gray-300 font-medium hover:text-white transition">Inventory</a>
+                <a href="production.html" class="text-gray-300 font-medium hover:text-white transition">Production</a>
+                <a href="sales.html" class="text-gray-300 font-medium hover:text-white transition">Sales</a>
+                <a href="investor-relations.html" class="text-white font-medium hover:underline transition">Investor Relations</a>
+            </div>
+            <button id="hamburger" class="md:hidden flex flex-col space-y-1 p-2 rounded focus:outline-none focus:ring-blue-500">
+                <span class="w-5 h-0.5 bg-white line line-1"></span>
+                <span class="w-5 h-0.5 bg-white line line-2"></span>
+                <span class="w-5 h-0.5 bg-white line line-3"></span>
+            </button>
+        </div>
+        <div id="mobileMenu" class="md:hidden hidden bg-gray-800">
+            <nav class="flex flex-col">
+                <a href="index.html" class="text-gray-300 font-medium hover:bg-gray-700 transition px-4 py-3">Home</a>
+                <a href="accounting.html" class="text-gray-300 font-medium hover:bg-gray-700 transition px-4 py-3">Accounting</a>
+                <a href="inventory.html" class="text-gray-300 font-medium hover:bg-gray-700 transition px-4 py-3">Inventory</a>
+                <a href="production.html" class="text-gray-300 font-medium hover:bg-gray-700 transition px-4 py-3">Production</a>
+                <a href="sales.html" class="text-gray-300 font-medium hover:bg-gray-700 transition px-4 py-3">Sales</a>
+                <a href="investor-relations.html" class="text-white font-medium hover:bg-gray-700 transition px-4 py-3">Investor Relations</a>
+            </nav>
+        </div>
+    </header>
+    <main class="flex-grow pt-16">
+        <div class="container mx-auto px-6 py-10">
+            <h1 class="text-3xl font-semibold text-gray-800 mb-6">Investor Relations</h1>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="bg-white rounded-lg shadow-md p-6">
+                    <h2 class="text-2xl font-semibold text-blue-700 mb-4">Quick Actions</h2>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <button id="view-investors-btn" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-full transition-colors duration-300 focus:outline-none focus:shadow-outline">
+                            <i class="fas fa-users mr-2"></i> View Investors
+                        </button>
+                        <button id="manage-communications-btn" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full transition-colors duration-300 focus:outline-none focus:shadow-outline">
+                            <i class="fas fa-envelope mr-2"></i> Manage Communications
+                        </button>
+                        <button id="view-financials-btn" class="bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded-full transition-colors duration-300 focus:outline-none focus:shadow-outline">
+                            <i class="fas fa-chart-line mr-2"></i> View Financials
+                        </button>
+                        <button id="schedule-meetings-btn" class="bg-purple-500 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded-full transition-colors duration-300 focus:outline-none focus:shadow-outline">
+                            <i class="fas fa-calendar-check mr-2"></i> Schedule Meetings
+                        </button>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-md p-6">
+                    <h2 class="text-2xl font-semibold text-blue-700 mb-4">Key Metrics</h2>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                            <h3 class="text-lg font-semibold text-gray-800">Market Cap</h3>
+                            <p id="market-cap" class="text-xl font-bold text-green-600">Loading...</p>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-semibold text-gray-800">Earnings Per Share (EPS)</h3>
+                            <p id="eps" class="text-xl font-bold text-blue-600">Loading...</p>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-semibold text-gray-800">Price-to-Earnings Ratio (P/E)</h3>
+                            <p id="pe-ratio" class="text-xl font-bold text-indigo-600">Loading...</p>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-semibold text-gray-800">Dividend Yield</h3>
+                            <p id="dividend-yield" class="text-xl font-bold text-yellow-600">Loading...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="view-investors" class="form-section hidden">
+                <h2>View Investors</h2>
+                 <div class="flex justify-content-end mb-4">
+                    <div class="btn-group">
+                        <button class="btn-primary" id="add-investor-btn">Add Investor</button>
+                    </div>
+                </div>
+                <div class="table-container">
+                    <table id="investor-table" class="data-table">
+                        <thead>
+                           <tr>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Contact Number</th>
+                                <th>Investment Amount</th>
+                                <th>Shares Owned</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>John Doe</td>
+                                <td>john.doe@example.com</td>
+                                <td>123-456-7890</td>
+                                <td>$100,000</td>
+                                <td>10,000</td>
+                                <td>
+                                    <div class="btn-group">
+                                        <button class="btn-icon edit"><i class="fas fa-edit"></i></button>
+                                        <button class="btn-icon delete"><i class="fas fa-trash"></i></button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Jane Smith</td>
+                                <td>jane.smith@example.com</td>
+                                <td>987-654-3210</td>
+                                <td>$50,000</td>
+                                <td>5,000</td>
+                                <td>
+                                    <div class="btn-group">
+                                        <button class="btn-icon edit"><i class="fas fa-edit"></i></button>
+                                        <button class="btn-icon delete"><i class="fas fa-trash"></i></button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div id="manage-communications" class="form-section hidden">
+                <h2>Manage Communications</h2>
+                <div class="flex justify-content-end mb-4">
+                    <div class="btn-group">
+                        <button class="btn-primary" id="send-newsletter-btn">Send Newsletter</button>
+                    </div>
+                </div>
+                <div class="card">
+                    <h3 class="card-title">Recent Communications</h3>
+                    <ul id="communication-log" class="list-disc list-inside">
+                        <li>2024-07-28: Annual Report Released</li>
+                        <li>2024-07-15: Quarterly Earnings Call Transcript</li>
+                        <li>2024-07-01: Press Release - New Product Launch</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div id="view-financials" class="form-section hidden">
+                <h2>View Financials</h2>
+                <div class="flex justify-content-center items-center gap-4 mb-4">
+                    <label for="financial-report-type" class="block text-gray-700 text-sm font-bold mt-2">Report Type:</label>
+                    <select id="financial-report-type" class="shadow appearance-none border rounded w-auto py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                        <option value="income-statement">Income Statement</option>
+                        <option value="balance-sheet">Balance Sheet</option>
+                        <option value="cash-flow-statement">Cash Flow Statement</option>
+                    </select>
+                    <button id="generate-financial-report-btn" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full transition-colors duration-300 focus:outline-none focus:shadow-outline">
+                        Generate Report
+                    </button>
+                </div>
+                <div id="financial-report-container" class="hidden mt-6">
+                    <h3 id="financial-report-title" class="text-xl font-semibold text-gray-800 mb-4 text-center">Financial Report</h3>
+                    <div class="table-container">
+                        <table id="financial-report-table" class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Account</th>
+                                    <th>Amount</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Revenue</td>
+                                    <td>$1,000,000</td>
+                                </tr>
+                                <tr>
+                                    <td>Cost of Goods Sold</td>
+                                    <td>$600,000</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div id="schedule-meetings" class="form-section hidden">
+                <h2>Schedule Meetings</h2>
+                <div class="form-group">
+                    <label for="meeting-date">Date:</label>
+                    <input type="date" id="meeting-date" class="form-control" />
+                    <p id="meeting-date-error" class="error-message hidden"></p>
+                </div>
+                <div class="form-group">
+                    <label for="meeting-time">Time:</label>
+                    <div class="time-slots">
+                        <span class="time-slot">9:00 AM</span>
+                        <span class="time-slot">10:00 AM</span>
+                        <span class="time-slot">11:00 AM</span>
+                        <span class="time-slot">2:00 PM</span>
+                        <span class="time-slot">3:00 PM</span>
+                        <span class="time-slot">4:00 PM</span>
+                    </div>
+                    <input type="hidden" id="meeting-time" />
+                    <p id="meeting-time-error" class="error-message hidden"></p>
+                </div>
+                <div class="form-group">
+                    <label for="investor-email">Investor Email:</label>
+                    <input type="email" id="investor-email" class="form-control" />
+                    <p id="investor-email-error" class="error-message hidden"></p>
+                </div>
+                <div class="form-group">
+                    <label for="meeting-subject">Subject:</label>
+                    <input type="text" id="meeting-subject" class="form-control" />
+                    <p id="meeting-subject-error" class="error-message hidden"></p>
+                </div>
+                <div class="form-group">
+                    <label for="meeting-agenda">Agenda:</label>
+                    <textarea id="meeting-agenda" class="form-control" rows="4"></textarea>
+                     <p id="meeting-agenda-error" class="error-message hidden"></p>
+                </div>
+                <div class="text-right mt-4">
+                    <button id="schedule-meeting-btn" class="btn-primary">Schedule Meeting</button>
+                    <button id="reset-meeting-form-btn" class="btn-secondary">Reset</button>
+                </div>
+                <div id="meeting-confirmation" class="mt-6 p-4 bg-green-100 border border-green-400 text-green-700 rounded relative hidden" role="alert">
+          

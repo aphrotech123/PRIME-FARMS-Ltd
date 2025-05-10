@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Finance Manager</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f3f4f6;
+            color: #1f2937;
+            padding: 2em;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            margin: 0;
+        }
+        h1 {
+            color: #4f46e5;
+            text-align: center;
+            font-size: 3rem;
+            font-weight: 700;
+            margin-top: 0;
+            margin-bottom: 1.5em;
+        }
+        .container {
+            max-width: 600px;
+            margin: 2em auto;
+            background: #fff;
+            padding: 2em;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            border: 1px solid #e5e7eb;
+        }
+        label {
+            display: block;
+            margin-top: 1em;
+            color: #374151;
+            font-weight: 500;
+        }
+        input[type="number"],
+        input[type="text"],
+        select {
+            width: calc(100% - 2rem);
+            padding: 0.75rem;
+            margin-top: 0.5em;
+            border-radius: 0.375rem;
+            border: 1px solid #d1d5db;
+            box-sizing: border-box;
+            font-size: 1rem;
+            transition: border-color 0.2s ease-in-out, shadow-sm 0.2s ease-in-out;
+        }
+        input[type="number"]:focus,
+        input[type="text"]:focus,
+        select:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+        }
+        .button {
+            background-color: #4f46e5;
+            color: white;
+            font-weight: 500;
+            border: none;
+            cursor: pointer;
+            border-radius: 0.375rem;
+            padding: 0.8rem 1.2rem;
+            margin-top: 1.5em;
+            width: 100%;
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            gap: 0.75rem;
+            transition: background-color 0.2s ease-in-out, transform 0.1s ease-in-out, box-shadow 0.2s ease-in-out;
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.05);
+        }
+        .button:hover {
+            background-color: #6366f1;
+            transform: translateY(-1px);
+            box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.15);
+        }
+        .button:active {
+            background-color: #4338ca;
+            transform: translateY(0);
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.05);
+        }
+        .button:disabled {
+            background-color: #d1d5db;
+            color: #6b7280;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        .spinner {
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-top: 2px solid white;
+            border-radius: 50%;
+            width: 1rem;
+            height: 1rem;
+            animation: spin 1s linear infinite;
+            margin-right: 0.5rem;
+        }
+        .loading {
+            pointer-events: none;
+            opacity: 0.8;
+        }
+        #transactions {
+            margin-top: 2.5em;
+            padding: 1em;
+            background: #f9f9f9;
+            border-radius: 0.375rem;
+            border: 1px solid #e5e7eb;
+        }
+        #transactions h3 {
+            color: #2563eb;
+            margin-top: 0;
+            border-bottom: 2px solid #e5e7eb;
+            padding-bottom: 0.5em;
+            margin-bottom: 0.5em;
+            font-size: 1.25rem;
+            font-weight: 600;
+        }
+        #transactions ul {
+            list-style: none;
+            padding: 0;
+        }
+        #transactions li {
+            padding: 0.75em 0;
+            border-bottom: 1px dashed #d1d5db;
+            line-height: 1.5rem;
+            font-size: 1rem;
+            color: #4b5563;
+        }
+        #transactions li:last-child {
+            border-bottom: none;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        /* Short Hamburger Button Styles */
+        #hamburger {
+            width: 40px;
+            height: 40px;
+            padding: 8px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around;
+            cursor: pointer;
+            border: none;
+            background: transparent;
+            outline: none;
+        }
+        #hamburger span {
+            width: 100%;
+            height: 2px;
+            background-color: white;
+            transition: all 0.3s ease;
+            border-radius: 2px;
+        }
+        .line {
+            transition: all 0.3s ease-in-out;
+        }
+        .open .line-1 {
+            transform: rotate(45deg) translateY(12px);
+        }
+        .open .line-2 {
+            opacity: 0;
+        }
+        .open .line-3 {
+            transform: rotate(-45deg) translateY(-12px);
+        }
+        #mobileMenu {
+            position: absolute;
+            top: 60px;
+            left: 0;
+            width: 100%;
+            background-color: #374151;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            z-index: 50;
+        }
+        #mobileMenu a {
+            color: white;
+            padding: 12px 16px;
+            display: block;
+            text-decoration: none;
+        }
+        #mobileMenu a:hover {
+            background-color: #4b5563;
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+    <header class="bg-gray-800 shadow-md w-full fixed top-0 left-0 z-50">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <img src="logo.png" alt="PRIME FARMS Ltd" class="h-10 w-10 rounded-full border-2 border-blue-400 shadow-sm" />
+                <h1 class="text-2xl font-extrabold text-white tracking-wide">PRIME FARMS Ltd - Admin</h1>
+            </div>
+            <div class="hidden md:flex space-x-6">
+                <a href="index.html" class="text-gray-300 font-medium hover:text-white transition">Main Home</a>
+                <a href="login.html" class="text-white font-medium hover:underline transition">Admin Panel</a>
+                <a href="profile.html" class="text-gray-300 font-medium hover:text-white transition flex items-center">
+                    <i class="fas fa-user mr-2"></i> Profile
+                </a>
+                <a href="settings.html" class="text-gray-300 font-medium hover:text-white transition flex items-center">
+                    <i class="fas fa-cog mr-2"></i> Settings
+                </a>
+                <a href="logout.html" class="text-gray-300 font-medium hover:text-white transition flex items-center">
+                    <i class="fas fa-sign-out-alt mr-2"></i> Logout
+                </a>
+            </div>
+            <button id="hamburger" class="md:hidden flex flex-col space-y-1 p-2 rounded focus:outline-none focus:ring-blue-500">
+                <span class="w-6 h-0.5 bg-white line line-1"></span>
+                <span class="w-6 h-0.5 bg-white line line-2"></span>
+                <span class="w-6 h-0.5 bg-white line line-3"></span>
+            </button>
+        </div>
+        <div id="mobileMenu" class="md:hidden hidden bg-gray-800">
+            <nav class="flex flex-col">
+                <a href="index.html" class="text-gray-300 font-medium hover:bg-gray-700 transition px-4 py-3">Home</a>
+                <a href="admin.html" class="text-white font-medium hover:bg-gray-700 transition px-4 py-3">Admin Panel</a>
+                <a href="profile.html" class="text-gray-300 font-medium hover:bg-gray-700 transition px-4 py-3 flex items-center">
+                    <i class="fas fa-user mr-2"></i>  Profile
+                </a>
+                <a href="settings.html" class="text-gray-300 font-medium hover:bg-gray-700 transition px-4 py-3 flex items-center">
+                    <i class="fas fa-cog mr-2"></i> Settings
+                </a>
+                <a href="logout.html" class="text-gray-300 font-medium hover:bg-gray-700 transition px-4 py-3 flex items-center">
+                    <i class="fas fa-sign-out-alt mr-2"></i> Logout
+                </a>
+            </nav>
+        </div>
+    </header>
+
+    <div class="container mt-16">
+        <h1>Finance Manager</h1>
+
+        <label for="amount">Amount: (Rwf)</label>
+        <input type="number" id="amount" placeholder="e.g. 5000" min="0" required>
+
+        <label for="type">Type:</label>
+        <select id="type">
+            <option value="Income">Income</option>
+            <option value="Expense">Expense</option>
+            <option value="Investment">Investment</option>
+            <option value="Loan">Loan</option>
+            <option value="Savings">Savings</option>
+            <option value="Other">Other</option>
+        </select>
+
+        <label for="description">Description:</label>
+        <input type="text" id="description" placeholder="e.g. Salary, Rent, etc.">
+
+        <button id="addBtn" onclick="addTransaction()" class="button">
+            <i class="fas fa-plus"></i> Add Transaction
+        </button>
+
+        <button id="showBtn" onclick="fetchTransactions()" class="button">
+            <i class="fas fa-list"></i> Show Transactions
+        </button>
+
+        <button id="pdfBtn" onclick="generatePDF()" class="button">
+            <i class="fas fa-file-pdf"></i> Download PDF
+        </button>
+
+        <div id="transactions"></div>
+    </div>
+
+    <footer class="bg-gray-800 text-white text-center py-6 text-sm">
+        &copy; 2025 PRIME FARMS Ltd. All rights reserved. | Powered by Aphrodice
+    </footer>
+
+    <script>
+        const scriptURL = 'https://script.google.com/macros/s/AKfycbybNJAlYvjdCQjzF2rxnVoR_Wlcikl0OhMuWEnCVTfzzqSn16ruSM9e8VY0dEAzTaJyHw/exec';
+
+        function setLoading(btn, isLoading) {
+            if (isLoading) {
+                btn.classList.add('loading');
+                btn.innerHTML = '<div class="spinner"></div> <span>Loading...</span>';
+                btn.disabled = true;
+            } else {
+                btn.classList.remove('loading');
+                btn.innerHTML = `<i class="fas fa-${btn.id === 'addBtn' ? 'plus' : btn.id === 'showBtn' ? 'list' : 'file-pdf'}"></i> ${btn.id.replace('Btn', '').replace(/([A-Z])/g, ' $1').trim()}`;
+                btn.disabled = false;
+            }
+        }
+
+        function addTransaction() {
+            const btn = document.getElementById('addBtn');
+            setLoading(btn, true);
+
+            const amount = document.getElementById('amount').value;
+            const type = document.getElementById('type').value;
+            const description = document.getElementById('description').value;
+
+            if (!amount || !description) {
+                alert("Please fill in all fields.");
+                setLoading(btn, false);
+                return;
+            }
+
+            const date = new Date().toLocaleString("en-GB", { timeZone: "Africa/Kigali" });
+
+            const data = new URLSearchParams();
+            data.append("amount", amount);
+            data.append("type", type);
+            data.append("description", description);
+            data.append("date", date);
+            data.append("action", "add");
+
+            fetch(scriptURL, {
+                method: 'POST',
+                body: data
+            })
+            .then(res => res.text())
+            .then(response => {
+                alert(response);
+                document.getElementById('amount').value = "";
+                document.getElementById('description').value = "";
+            })
+            .catch(error => {
+                alert("Error: " + error);
+            })
+            .finally(() => setLoading(btn, false));
+        }
+
+        function fetchTransactions() {
+            const btn = document.getElementById('showBtn');
+            setLoading(btn, true);
+
+            fetch(scriptURL)
+                .then(response => response.json())
+                .then(data => {
+                    let html = '<h3>Transactions History</h3><ul>';
+                    data.forEach(t => {
+                        html += `<li>${t.date} - ${t.type}: ${t.amount} (${t.description})</li>`;
+                    });
+                    html += '</ul>';
+                    document.getElementById('transactions').innerHTML = html;
+                })
+                .catch(err => {
+                    document.getElementById('transactions').innerHTML = 'Failed to load transactions.';
+                })
+                .finally(() => setLoading(btn, false));
+        }
+
+        function generatePDF() {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            const transactionList = document.getElementById('transactions');
+
+            if (transactionList.innerHTML.trim() === '') {
+                alert('No transactions available to generate a PDF.');
+                return;
+            }
+
+            const transactions = transactionList.getElementsByTagName('li');
+            let y = 10;
+            const lineHeight = 8;
+            const pageHeight = doc.internal.pageSize.height;
+            const pageWidth = doc.internal.pageSize.width;
+            const margin = 10;
+
+            const address = [
+                "PRIME FARMS Ltd",
+                "Kagasa-Rweru Rd, off RN 15",
+                "Bugesera, Rwanda",
+                "Website: www.primefarms.rw",
+                "Email: info@primefarms.rw",
+                "Tel: +250 794 894 144",
+            ];
+
+            address.forEach((line, i) => {
+                doc.setFontSize(9);
+                doc.text(line, 150, 10 + i * 5, { align: 'left' });
+            });
+
+            y += 1;
+
+            doc.setFontSize(14);
+            doc.text("Finance Transactions Report", 14, y);
+            y += 10;
+
+            doc.setFontSize(10);
+            generator = localStorage.getItem("loggedInEmail") || "Unknown User";
+            doc.text("Generated by: " + generator, 14, y);
+            y += 7;
+
+            doc.text("Generated on: " + new Date().toLocaleString("en-GB", { timeZone: "Africa/Kigali" }), 14, y);
+            y += 7;
+            doc.text("Generated from: " + window.location.href, 14, y);
+            y += 10;
+
+            doc.setLineWidth(0.5);
+            doc.line(14, y, 196, y);
+            y += 5;
+
+            doc.setFontSize(10);
+            // Increased widths and adjusted positions.
+            const columnWidths = [50, 40, 30, 80];
+            const columnHeaders = ["Date", "Type", "Amount", "Description"];
+            let x = 24;  // Start x position
+            columnHeaders.forEach((header, i) => {
+                doc.text(header, x, y);
+                x += columnWidths[i];
+            });
+            y += 5;
+            doc.line(14, y, 196, y);
+            y += 5;
+
+            Array.from(transactions).forEach((t, i) => {
+                if (y > pageHeight - 20) {
+                    doc.addPage();
+                    y = 10;
+                }
+                const parts = t.textContent.split(" - ");
+                let date = parts[0];
+                const typeAndAmount = parts[1].split(": ");
+                const type = typeAndAmount[0];
+                const amountAndDescription = typeAndAmount[1].split(" (");
+                const amount = amountAndDescription[0];
+                const description = amountAndDescription[1].slice(0, -1);
+
+                // Format the date to fit
+                const dateParts = date.split(', ');
+                if (dateParts.length > 1) {
+                    date = dateParts[0] + ',\n' + dateParts[1];
+                }
+
+                doc.setFontSize(10);
+                let xPos = 24; // Start x position
+                doc.text(date, xPos, y, { maxWidth: columnWidths[0], lineHeight: 1.2 });
+                xPos += columnWidths[0];
+                doc.text(type, xPos, y, { maxWidth: columnWidths[1], lineHeight: 1.2 });
+                xPos += columnWidths[1];
+                doc.text(amount, xPos, y, { maxWidth: columnWidths[2], lineHeight: 1.2 });
+                xPos += columnWidths[2];
+                doc.text(description, xPos, y, { maxWidth: columnWidths[3], lineHeight: 1.2 });
+                y += lineHeight * 1.5;
+            });
+
+            doc.save('PRIME_FARMS_Transactions_Report.pdf');
+        }
+
+        document.addEventListener("DOMContentLoaded", () => {
+            document.getElementById('hamburger').addEventListener('click', function() {
+                this.classList.toggle('open');
+                document.getElementById('mobileMenu').classList.toggle('hidden');
+            });
+        });
+
+        document.querySelectorAll('#mobileMenu a').forEach(link => {
+            link.addEventListener('click', () => {
+                document.getElementById('hamburger').classList.remove('open');
+                document.getElementById('mobileMenu').classList.add('hidden');
+            });
+        });
+    </script>
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</body>
+</html>

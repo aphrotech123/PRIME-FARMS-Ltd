@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Manage Orders - PRIME FARMS Ltd Admin</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+        }
+        /* Short Hamburger Button Styles */
+        #hamburger {
+            width: 45px;
+            padding: 6px;
+            flex-direction: column;
+            justify-content: space-around;
+            cursor: pointer;
+        }
+        #hamburger span {
+            width: 100%;
+            height: 2px;
+            background-color: white;
+            transition: all 0.3s ease;
+            border-radius: 2px;
+        }
+        .line {
+            transition: all 0.3s ease-in-out;
+        }
+        .open .line-1 {
+            transform: rotate(45deg) translateY(0.4rem);
+        }
+        .open .line-2 {
+            opacity: 0;
+        }
+        .open .line-3 {
+            transform: rotate(-45deg) translateY(-0.4rem);
+        }
+        #mobileMenu {
+            position: absolute;
+            top: 60px;
+            left: 0;
+            width: 100%;
+            background-color: #007bff;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            z-index: 50;
+        }
+        #mobileMenu a {
+            color: white;
+            padding: 12px 16px;
+            display: block;
+            text-decoration: none;
+        }
+        #mobileMenu a:hover {
+            background-color: #0056b3;
+        }
+        /* Loading Spinner Styles */
+        .loader {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #3498db;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            animation: spin 2s linear infinite;
+            margin: 0 auto;
+            margin-top: 10px;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body class="bg-gray-100 min-h-screen flex flex-col">
+    <header class="bg-gray-800 shadow-md w-full fixed top-0 left-0 z-50">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <img src="logo.png" alt="PRIME FARMS Ltd" class="h-10 w-10 rounded-full border-2 border-blue-400 shadow-sm" />
+                <h1 class="text-2xl font-extrabold text-white tracking-wide">PRIME FARMS Ltd - Admin</h1>
+            </div>
+            <div class="hidden md:flex space-x-6">
+                <a href="index.html" class="text-gray-300 font-medium hover:text-white transition">Home</a>
+                <a href="about.html" class="text-gray-300 font-medium hover:text-white transition">About Us</a>
+                <a href="products.html" class="text-gray-300 font-medium hover:text-white transition">Products</a>
+                <a href="order.html" class="text-gray-300 font-medium hover:text-white transition">Orders</a>
+                <a href="blog.html" class="text-gray-300 font-medium hover:text-white transition">Blog</a>
+                <a href="contact.html" class="text-gray-300 font-medium hover:text-white transition">Contact</a>
+                <a href="gallery.html" class="text-gray-300 font-medium hover:text-white transition">Gallery</a>
+                <a href="admin.html" class="text-white font-medium hover:underline transition">Admin Panel</a>
+            </div>
+            <button id="hamburger" class="md:hidden flex flex-col space-y-1 p-2 rounded focus:outline-none focus:ring-blue-500">
+                <span class="w-5 h-0.5 bg-white line line-1"></span>
+                <span class="w-5 h-0.5 bg-white line line-2"></span>
+                <span class="w-5 h-0.5 bg-white line line-3"></span>
+            </button>
+        </div>
+        <div id="mobileMenu" class="md:hidden hidden bg-gray-800">
+            <nav class="flex flex-col">
+                <a href="index.html" class="text-gray-300 font-medium hover:bg-gray-700 transition px-4 py-3">Home</a>
+                <a href="about.html" class="text-gray-300 font-medium hover:bg-gray-700 transition px-4 py-3">About Us</a>
+                <a href="products.html" class="text-gray-300 font-medium hover:bg-gray-700 transition px-4 py-3">Products</a>
+                <a href="order.html" class="text-gray-300 font-medium hover:bg-gray-700 transition px-4 py-3">Orders</a>
+                <a href="blog.html" class="text-gray-300 font-medium hover:bg-gray-700 transition px-4 py-3">Blog</a>
+                <a href="contact.html" class="text-gray-300 font-medium hover:bg-gray-700 transition px-4 py-3">Contact</a>
+                <a href="gallery.html" class="text-gray-300 font-medium hover:bg-gray-700 transition px-4 py-3">Gallery</a>
+                <a href="admin.html" class="text-white font-medium hover:underline transition px-4 py-3">Admin Panel</a>
+            </nav>
+        </div>
+    </header>
+    <main class="flex-grow pt-16"> <div class="container mx-auto px-6 py-10">
+            <h1 class="text-3xl font-semibold text-gray-800 mb-6">Manage Orders</h1>
+            <p class="text-lg text-gray-700 mb-4">
+                Use the options below to manage customer orders.
+            </p>
+
+            <div id="order-list" class="bg-white rounded-lg shadow-md p-6 mb-8">
+                <h2 class="text-2xl font-semibold text-blue-700 mb-4">Order List</h2>
+                <div class="loader" id="order-list-loader"></div>
+                <table id="order-table" class="min-w-full table-auto rounded-lg hidden">
+                    <thead class="bg-gray-200">
+                        <tr>
+                            <th class="px-4 py-2 text-left">Order ID</th>
+                            <th class="px-4 py-2 text-left">Customer Name</th>
+                            <th class="px-4 py-2 text-left">Order Date</th>
+                            <th class="px-4 py-2 text-left">Total (RWF)</th>
+                            <th class="px-4 py-2 text-left">Status</th>
+                            <th class="px-4 py-2 text-left">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-gray-700">
+                    </tbody>
+                </table>
+                <div id="order-list-error" class="mt-4 p-4 bg-red-100 text-red-800 rounded-md border border-red-400 hidden">
+                      <h4 class="font-semibold">Error</h4>
+                      <p>Failed to load orders. Please try again.</p>
+                </div>
+            </div>
+
+            <div id="order-details" class="bg-white rounded-lg shadow-md p-6 hidden mb-8">
+                <h2 class="text-2xl font-semibold text-blue-700 mb-4">Order Details</h2>
+                <div class="loader" id="order-details-loader"></div>
+                <div id="order-details-content" class="space-y-4 hidden">
+                    <div class="flex space-x-4">
+                        <p><span class="font-semibold">Order ID:</span> <span id="order-id"></span></p>
+                        <p><span class="font-semibold">Customer Name:</span> <span id="customer-name"></span></p>
+                        <p><span class="font-semibold">Order Date:</span> <span id="order-date"></span></p>
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-semibold">Order Items:</h3>
+                        <table id="order-items-table" class="min-w-full table-auto rounded-lg">
+                            <thead class="bg-gray-200">
+                                <tr>
+                                    <th class="px-4 py-2 text-left">Product Name</th>
+                                    <th class="px-4 py-2 text-left">Quantity (kg)</th>
+                                    <th class="px-4 py-2 text-left">Price (RWF)</th>
+                                    <th class="px-4 py-2 text-left">Subtotal (RWF)</th>
+                                </tr>
+                            </thead>
+                            <tbody class="text-gray-700">
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="flex space-x-4">
+                         <p><span class="font-semibold">Total:</span> <span id="order-total"></span></p>
+                         <p><span class="font-semibold">Status:</span> <span id="order-status"></span></p>
+                    </div>
+                    <div id="order-actions" class="flex justify-end space-x-2">
+                        <button class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-full transition-colors duration-300" onclick="processOrder()">Process Order</button>
+                        <button class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-full transition-colors duration-300" onclick="cancelOrder()">Cancel Order</button>
+                        <button class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-full transition-colors duration-300" onclick="hideOrderDetails()">Back to List</button>
+                    </div>
+                </div>
+                <div id="order-details-error" class="mt-4 p-4 bg-red-100 text-red-800 rounded-md border border-red-400 hidden">
+                      <h4 class="font-semibold">Error</h4>
+                      <p>Failed to load order details. Please try again.</p>
+                </div>
+            </div>
+        </div>
+    </main>
+    <footer class="bg-gray-800 text-white text-center py-6 text-sm">
+        &copy; 2025 PRIME FARMS Ltd. All rights reserved. | Powered by Aphrodice
+    </footer>
+    <script>
+        const orderTable = document.getElementById("order-table");
+        const orderTableBody = orderTable.querySelector("tbody");
+        const orderListLoader = document.getElementById("order-list-loader");
+        const orderListError = document.getElementById("order-list-error");
+        const orderDetailsContainer = document.getElementById("order-details");
+        const orderDetailsLoader = document.getElementById("order-details-loader");
+        const orderDetailsContent = document.getElementById("order-details-content");
+        const orderItemsTableBody = document.getElementById("order-items-table").querySelector("tbody");
+        const orderIdDisplay = document.getElementById("order-id");
+        const customerNameDisplay = document.getElementById("customer-name");
+        const orderDateDisplay = document.getElementById("order-date");
+        const orderTotalDisplay = document.getElementById("order-total");
+        const orderStatusDisplay = document.getElementById("order-status");
+        const orderActions = document.getElementById("order-actions");
+        const orderDetailsError = document.getElementById("order-details-error");
+
+        let orders = [];
+        let currentOrderId = null;
+        let action = "view";
+
+        // Fetch orders from API
+        function fetchOrders() {
+            orderListLoader.classList.remove("hidden");
+            orderTable.classList.add("hidden");
+            orderListError.classList.add("hidden");
+            fetch("http://localhost:3000/orders") // Replace with your API endpoint
+                .then((response) => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! Status: ${response.status}`);
+                    }
+                    return response.json();
+                })
+                .then((data) => {
+                    orders = data;
+                    renderOrderTable();
+                    orderListLoader.classList.add("hidden");
+                    orderTable.classList.remove("hidden");
+                })
+                .catch((error) => {
+                    console.error("Error fetching orders:", error);
+                    orderListLoader.classList.add("hidden");
+                    orderListError.classList.remove("hidden");
+                });
+        }
+
+        // Render order table
+        function renderOrderTable() {
+            orderTableBody.innerHTML = "";
+            orders.forEach((order) => {
+                const row = orderTableBody.insertRow();
+                const orderIdCell = row.insertCell();
+                const customerNameCell = row.insertCell();
+                const orderDateCell = row.insertCell();
+                const totalCell = row.insertCell();
+                const statusCell = row.insertCell();
+                const actionsCell = row.insertCell();
+
+                orderIdCell.textContent = order.id;
+                customerNameCell.textContent = order.customerName;
+                orderDateCell.textContent = order.orderDate;
+                totalCell.textContent = order.total;
+                statusCell.textContent = order.status;
+                actionsCell.innerHTML = `
+                    <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded-full transition-colors duration-300 text-sm" onclick="showOrderDetails('${order.id}')">View Details</button>
+                `;
+            });
+        }
+
+        // Show order details
+        function showOrderDetails(orderId) {
+            currentOrderId = orderId;
+            orderDetailsContainer.classList.remove("hidden");
+            orderList.classList.add("hidden");
+            orderDetailsLoader.classList.remove("hidden");
+            orderDetailsContent.classList.add("hidden");
+            orderDetailsError.classList.add("hidden");
+
+            fetch(`http://localhost:3000/orders/${orderId}`) // Replace with your API endpoint
+                .then((response) => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! Status: ${response.status}`);
+                    }
+                    return response.json();
+                })
+                .then((order) => {
+                    orderIdDisplay.textContent = order.id;
+                    customerNameDisplay.textContent = order.customerName;
+                    orderDateDisplay.textContent = order.orderDate;
+                    orderTotalDisplay.textContent = order.total;
+                    orderStatusDisplay.textContent = order.status;
+
+                    orderItemsTableBody.innerHTML = "";
+                    order.items.forEach((item) => {
+                        const row = orderItemsTableBody.insertRow();
+                        const productNameCell = row.insertCell();
+                        const quantityCell = row.insertCell();
+                        const priceCell = row.insertCell();
+                        const subtotalCell = row.insertCell();
+
+                        productNameCell.textContent = item.productName;
+                        quantityCell.textContent = item.quantity;
+                        priceCell.textContent = item.price;
+                        subtotalCell.textContent = item.quantity * item.price;
+                    });
+                    orderDetailsLoader.classList.add("hidden");
+                    orderDetailsContent.classList.remove("hidden");
+                    showOrderActions(order.status);
+                })
+                .catch((error) => {
+                    console.error("Error fetching order details:", error);
+                    orderDetailsLoader.classList.add("hidden");
+                    orderDetailsError.classList.remove("hidden");
+                });
+        }
+
+        function showOrderActions(status) {
+            orderActions.innerHTML = "";
+            if (status === "pending") {
+                orderActions.innerHTML = `
+                    <button class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-full transition-colors duration-300" onclick="processOrder()">Process Order</button>
+                    <button class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-full transition-colors duration-300" onclick="cancelOrder()">Cancel Order</button>
+                    <button class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-full transition-colors duration-300" onclick="hideOrderDetails()">Back to List</button>
+                `;
+            } else {
+                orderActions.innerHTML = `
+                    <button class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-full transition-colors duration-300" onclick="hideOrderDetails()">Back to List</button>
+                `;
+            }
+        }
+
+        // Function to handle order processing
+        function processOrder() {
+            // In a real application, you would send a request to your server to update the order status
+            fetch(`http://localhost:3000/orders/${currentOrderId}`, {  // Replace with your API endpoint
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ status: 'processing' }), // Or whatever the next status is
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(updatedOrder => {
+                // Update the order in the local array
+                orders = orders.map(order => order.id === currentOrderId ? updatedOrder : order);
+                renderOrderTable(); // Re-render the table to show the updated status
+                orderStatusDisplay.textContent = updatedOrder.status; // Update status in details view
+                showMessage('Success', 'Order processed successfully.');
+                showOrderActions(updatedOrder.status);
+            })
+            .catch(error => {
+                console.error('Error processing order:', error);
+                showMessage('Error', 'Failed to process order.');
+            });
+        }
+
+
+
+        // Function to handle order cancellation
+        function cancelOrder() {
+            // In a real application, you would send a request to your server to update the order status
+             fetch(`http://localhost:3000/orders/${currentOrderId}`, {  // Replace with your API endpoint
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ status: 'cancelled' }), // Or whatever the next status is
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(updatedOrder => {
+                // Update the order in the local array
+                orders = orders.map(order => order.id === currentOrderId ? updatedOrder : order);
+                renderOrderTable();  // Re-render the table to show the updated status
+                orderStatusDisplay.textContent = updatedOrder.status;  // Update the status in the details view
+                showMessage('Success', 'Order cancelled successfully.');
+                showOrderActions(updatedOrder.status);
+            })
+            .catch(error => {
+                console.error('Error cancelling order:', error);
+                showMessage('Error', 'Failed to cancel order.');
+            });
+        }
+
+        // Function to hide order details and show the order list
+        function hideOrderDetails() {
+            orderDetailsContainer.classList.add("hidden");
+            orderList.classList.remove("hidden");
+            currentOrderId = null;
+        }
+
+        function showMessage(title, text) {
+            const messageContainer = document.createElement('div');
+            messageContainer.className = "mt-4 p-4 rounded-md bg-green-100 text-green-800 border border-green-400 fixed bottom-4 left-4 z-50";
+            messageContainer.innerHTML = `<h4 class="font-semibold">${title}</h4><p>${text}</p>`;
+            document.body.appendChild(messageContainer);
+
+            setTimeout(() => {
+                messageContainer.remove();
+            }, 3000);
+        }
+
+        // Initial load
+        document.addEventListener("DOMContentLoaded", () => {
+             const urlParams = new URLSearchParams(window.location.search);
+             action = urlParams.get('action');
+
+            fetchOrders();
+
+            document.getElementById('hamburger').addEventListener('click', function() {
+                this.classList.toggle('open');
+                document.getElementById('mobileMenu').classList.toggle('hidden');
+            });
+        });
+    </script>
+</body>
+</html>

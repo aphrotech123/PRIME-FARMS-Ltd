@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Customer Dashboard</title>
+    <style>
+        body {
+            font-family: Arial;
+            padding: 30px;
+            background: #e8f6f3;
+            display: flex; /* Added for sticky footer */
+            flex-direction: column; /* Added for sticky footer */
+            min-height: 100vh; /* Added for sticky footer */
+            margin: 0; /* Reset default body margin */
+        }
+
+        h1 {
+            color: #1abc9c;
+            text-align: center; /* Center the heading */
+        }
+
+        .card {
+            background: white;
+            padding: 20px;
+            margin: 10px 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.06);
+        }
+
+        header {
+            background-color: #1abc9c; /* Header background color */
+            color: white; /* Header text color */
+            padding: 1em 0; /* Padding for the header */
+            text-align: center; /* Center header content */
+            margin-bottom: 20px; /* Add some space below the header */
+        }
+
+        header h2 {
+            margin: 0; /* Remove default heading margin */
+            font-size: 1.5em; /* Adjust font size if needed */
+        }
+
+
+        footer {
+            background-color: #333; /* Footer background color */
+            color: white; /* Footer text color */
+            text-align: center; /* Center footer content */
+            padding: 1em 0; /* Padding for the footer */
+            margin-top: auto; /* Push footer to bottom */
+        }
+        footer p{
+            margin: 0;
+            font-size: 0.9em;
+        }
+        .container { /* Added a container div to wrap the main content */
+            flex: 1; /* Allow the container to grow and take up available space */
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h2>PRIME FARMS - Customer Portal</h2> </header>
+    <div class="container">
+        <h1>Welcome to PRIME FARMS</h1>
+        <div class="card">
+            <h3>Explore Products</h3>
+            <p>See available mushroom varieties, pricing, and offers.</p>
+        </div>
+        <div class="card">
+            <h3>My Orders</h3>
+            <p>View your current and past orders.</p>
+        </div>
+    </div>
+    <footer>
+        <p>&copy; 2025 PRIME FARMS. All rights reserved.</p>
+    </footer>
+</body>
+</html>

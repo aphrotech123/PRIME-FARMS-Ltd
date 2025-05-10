@@ -1,0 +1,1546 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sales Management - PRIME FARMS Ltd Admin</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/@themesberg/flowbite@1.7.1/dist/flowbite.min.css" />
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+        }
+        /* Short Hamburger Button Styles */
+        #hamburger {
+            width: 45px;
+            padding: 6px;
+            flex-direction: column;
+            justify-content: space-around;
+            cursor: pointer;
+        }
+        #hamburger span {
+            width: 100%;
+            height: 2px;
+            background-color: white;
+            transition: all 0.3s ease;
+            border-radius: 2px;
+        }
+        .line {
+            transition: all 0.3s ease-in-out;
+        }
+        .open .line-1 {
+            transform: rotate(45deg) translateY(0.4rem);
+        }
+        .open .line-2 {
+            opacity: 0;
+        }
+        .open .line-3 {
+            transform: rotate(-45deg) translateY(-0.4rem);
+        }
+        #mobileMenu {
+            position: absolute;
+            top: 60px;
+            left: 0;
+            width: 100%;
+            background-color: #007bff;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            z-index: 50;
+        }
+        #mobileMenu a {
+            color: white;
+            padding: 12px 16px;
+            display: block;
+            text-decoration: none;
+        }
+        #mobileMenu a:hover {
+            background-color: #0056b3;
+        }
+        /* Loading Spinner Styles */
+        .loader {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #3498db;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            animation: spin 2s linear infinite;
+            margin: 0 auto;
+            margin-top: 10px;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .form-section {
+            background-color: white;
+            border-radius: 0.5rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .form-section h2 {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #1e293b;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.875rem;
+            color: #374151;
+            margin-bottom: 0.5rem;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0.75rem;
+            border-radius: 0.375rem;
+            border: 1px solid #d1d5db;
+            font-size: 1rem;
+            color: #4b5563;
+            outline: none;
+            transition: border-color 0.15s ease-in-out, shadow-sm 0.15s ease-in-out;
+        }
+
+        .form-control:focus {
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .btn-primary {
+            background-color: #3b82f6;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.375rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.2s ease-in-out;
+            border: none;
+            font-size: 1rem;
+        }
+
+        .btn-primary:hover {
+            background-color: #2563eb;
+        }
+
+        .btn-secondary {
+            background-color: #e5e7eb;
+            color: #374151;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.375rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.2s ease-in-out;
+            border: none;
+            font-size: 1rem;
+            margin-left: 0.5rem;
+        }
+
+        .btn-secondary:hover {
+            background-color: #d1d5db;
+        }
+
+        .text-right {
+            text-align: right;
+        }
+
+        #report-container {
+            margin-top: 2rem;
+            padding: 1.5rem;
+            background-color: white;
+            border-radius: 0.5rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        #report-container h3 {
+            font-size: 1.25rem;
+            font-weight: bold;
+            color: #1e293b;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        #report-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+
+        #report-table thead th {
+            padding: 0.75rem;
+            background-color: #f3f4f6;
+            color: #6b7280;
+            font-weight: 500;
+            text-align: left;
+            border-bottom: 1px solid #d1d5db;
+        }
+
+        #report-table tbody td {
+            padding: 0.75rem;
+            color: #4b5563;
+            border-bottom: 1px solid #d1d5db;
+        }
+
+        #report-table tbody tr:nth-child(odd) {
+            background-color: #f9fafb;
+        }
+
+        #report-table tfoot td {
+            padding: 0.75rem;
+            color: #1e293b;
+            font-weight: bold;
+            text-align: left;
+        }
+        #report-table tfoot td:last-child{
+            text-align: right;
+        }
+
+        .mt-4 {
+            margin-top: 1rem;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .error-message {
+            color: #dc2626;
+            font-size: 0.875rem;
+            margin-top: 0.5rem;
+        }
+        .card {
+            background-color: white;
+            border-radius: 0.5rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .card-title {
+            font-size: 1.25rem;
+            font-weight: bold;
+            color: #1e293b;
+            margin-bottom: 1rem;
+        }
+
+        .table-container {
+            overflow-x: auto;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            border-spacing: 0;
+            min-width: 800px;
+        }
+
+        .data-table thead th {
+            background-color: #f3f4f6;
+            color: #6b7280;
+            text-align: left;
+            padding: 0.75rem 1rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+            border-bottom: 1px solid #d1d5db;
+        }
+
+        .data-table tbody td {
+            color: #4b5563;
+            padding: 0.75rem 1rem;
+            font-size: 0.9rem;
+            border-bottom: 1px solid #d1d5db;
+        }
+
+        .data-table tbody tr:hover {
+            background-color: #f9fafb;
+        }
+
+        .data-table tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .btn-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.5rem;
+            border-radius: 0.375rem;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.2s ease-in-out;
+            border: none;
+        }
+
+        .btn-icon:hover {
+            opacity: 0.8;
+        }
+
+        .btn-icon.edit {
+            background-color: #f0fdf4;
+            color: #22c55e;
+        }
+
+        .btn-icon.edit:hover {
+            background-color: #ecfdf5;
+        }
+
+        .btn-icon.delete {
+            background-color: #fef2f2;
+            color: #ef4444;
+        }
+
+        .btn-icon.delete:hover {
+            background-color: #fee2e2;
+        }
+
+        .form-select {
+            width: 100%;
+            padding: 0.75rem;
+            border-radius: 0.375rem;
+            border: 1px solid #d1d5db;
+            font-size: 1rem;
+            color: #4b5563;
+            outline: none;
+            transition: border-color 0.15s ease-in-out, shadow-sm 0.15s ease-in-out;
+            background-color: white;
+        }
+
+        .form-select:focus {
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+        .promotions-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+            margin-top: 1rem;
+        }
+
+        @media (min-width: 768px) {
+            .promotions-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        .promotion-card {
+            background-color: white;
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .promotion-card h3 {
+            font-size: 1.25rem;
+            font-weight: bold;
+            color: #1e293b;
+            margin-bottom: 1rem;
+        }
+
+        .promotion-card p {
+            font-size: 0.9rem;
+            color: #4b5563;
+            margin-bottom: 0.5rem;
+        }
+
+        .promotion-card .actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 min-h-screen flex flex-col">
+    <header class="bg-gray-800 shadow-md w-full fixed top-0 left-0 z-50">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <img src="logo.png" alt="PRIME FARMS Ltd" class="h-10 w-10 rounded-full border-2 border-blue-400 shadow-sm" />
+                <h1 class="text-2xl font-extrabold text-white tracking-wide">PRIME FARMS Ltd - Admin</h1>
+            </div>
+            <div class="hidden md:flex space-x-6">
+                <a href="index.html" class="text-gray-300 font-medium hover:text-white transition">Home</a>
+                <a href="accounting.html" class="text-gray-300 font-medium hover:text-white transition">Accounting</a>
+                <a href="inventory.html" class="text-gray-300 font-medium hover:text-white transition">Inventory</a>
+                <a href="production.html" class="text-gray-300 font-medium hover:text-white transition">Production</a>
+                <a href="sales.html" class="text-white font-medium hover:underline transition">Sales</a>
+            </div>
+            <button id="hamburger" class="md:hidden flex flex-col space-y-1 p-2 rounded focus:outline-none focus:ring-blue-500">
+                <span class="w-5 h-0.5 bg-white line line-1"></span>
+                <span class="w-5 h-0.5 bg-white line line-2"></span>
+                <span class="w-5 h-0.5 bg-white line line-3"></span>
+            </button>
+        </div>
+        <div id="mobileMenu" class="md:hidden hidden bg-gray-800">
+            <nav class="flex flex-col">
+                <a href="index.html" class="text-gray-300 font-medium hover:bg-gray-700 transition px-4 py-3">Home</a>
+                <a href="accounting.html" class="text-gray-300 font-medium hover:bg-gray-700 transition px-4 py-3">Accounting</a>
+                <a href="inventory.html" class="text-gray-300 font-medium hover:bg-gray-700 transition px-4 py-3">Inventory</a>
+                <a href="production.html" class="text-gray-300 font-medium hover:bg-gray-700 transition px-4 py-3">Production</a>
+                <a href="sales.html" class="text-white font-medium hover:bg-gray-700 transition px-4 py-3">Sales</a>
+            </nav>
+        </div>
+    </header>
+    <main class="flex-grow pt-16">
+        <div class="container mx-auto px-6 py-10">
+            <h1 class="text-3xl font-semibold text-gray-800 mb-6">Sales Management</h1>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="bg-white rounded-lg shadow-md p-6">
+                    <h2 class="text-2xl font-semibold text-blue-700 mb-4">Quick Actions</h2>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <button id="view-sales-btn" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-full transition-colors duration-300 focus:outline-none focus:shadow-outline">
+                            <i class="fas fa-chart-line mr-2"></i> View Sales
+                        </button>
+                        <button id="manage-customers-btn" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full transition-colors duration-300 focus:outline-none focus:shadow-outline">
+                            <i class="fas fa-users mr-2"></i> Manage Customers
+                        </button>
+                        <button id="track-performance-btn" class="bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded-full transition-colors duration-300 focus:outline-none focus:shadow-outline">
+                            <i class="fas fa-tachometer-alt mr-2"></i> Track Performance
+                        </button>
+                        <button id="manage-promotions-btn" class="bg-purple-500 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded-full transition-colors duration-300 focus:outline-none focus:shadow-outline">
+                            <i class="fas fa-gift mr-2"></i> Manage Promotions
+                        </button>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-md p-6">
+                    <h2 class="text-2xl font-semibold text-blue-700 mb-4">Sales Overview</h2>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                            <h3 class="text-lg font-semibold text-gray-800">Total Sales</h3>
+                            <p id="total-sales" class="text-xl font-bold text-green-600">Loading...</p>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-semibold text-gray-800">Sales Today</h3>
+                            <p id="sales-today" class="text-xl font-bold text-blue-600">Loading...</p>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-semibold text-gray-800">YTD Sales</h3>
+                            <p id="ytd-sales" class="text-xl font-bold text-indigo-600">Loading...</p>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-semibold text-gray-800">Top Product</h3>
+                            <p id="top-product" class="text-xl font-bold text-yellow-600">Loading...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="view-sales" class="form-section hidden">
+                <h2>View Sales</h2>
+                <div class="flex justify-content-end mb-4">
+                    <div class="btn-group">
+                        <button class="btn-primary" id="add-sale-btn">Add Sale</button>
+                    </div>
+                </div>
+                <div class="table-container">
+                    <table id="sales-table" class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Order ID</th>
+                                <th>Customer</th>
+                                <th>Product</th>
+                                <th>Quantity</th>
+                                <th>Amount</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>2024-07-28</td>
+                                <td>ORD-12345</td>
+                                <td>John Doe</td>
+                                <td>Product A</td>
+                                <td>10</td>
+                                <td>100.00</td>
+                                <td>Shipped</td>
+                                <td>
+                                    <div class="btn-group">
+                                        <button class="btn-icon edit"><i class="fas fa-edit"></i></button>
+                                        <button class="btn-icon delete"><i class="fas fa-trash"></i></button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>2024-07-27</td>
+                                <td>ORD-12346</td>
+                                <td>Jane Smith</td>
+                                <td>Product B</td>
+                                <td>5</td>
+                                <td>50.00</td>
+                                <td>Pending</td>
+                                 <td>
+                                    <div class="btn-group">
+                                        <button class="btn-icon edit"><i class="fas fa-edit"></i></button>
+                                        <button class="btn-icon delete"><i class="fas fa-trash"></i></button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div id="manage-customers" class="form-section hidden">
+                <h2>Manage Customers</h2>
+                 <div class="flex justify-content-end mb-4">
+                    <div class="btn-group">
+                        <button class="btn-primary" id="add-customer-btn">Add Customer</button>
+                    </div>
+                </div>
+                <div class="table-container">
+                    <table id="customer-table" class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Phone</th>
+                                <th>Address</th>
+                                <th>Orders</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>John Doe</td>
+                                <td>john.doe@example.com</td>
+                                <td>123-456-7890</td>
+                                <td>123 Main St</td>
+                                <td>10</td>
+                                <td>
+                                    <div class="btn-group">
+                                        <button class="btn-icon edit"><i class="fas fa-edit"></i></button>
+                                        <button class="btn-icon delete"><i class="fas fa-trash"></i></button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Jane Smith</td>
+                                <td>jane.smith@example.com</td>
+                                <td>987-654-3210</td>
+                                <td>456 Oak Ave</td>
+                                <td>5</td>
+                                <td>
+                                    <div class="btn-group">
+                                        <button class="btn-icon edit"><i class="fas fa-edit"></i></button>
+                                        <button class="btn-icon delete"><i class="fas fa-trash"></i></button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div id="track-performance" class="form-section hidden">
+                <h2>Track Sales Performance</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="card">
+                        <h3 class="card-title">Sales Over Time</h3>
+                        <div id="sales-chart" class="chart-container">
+                            <div class="loader"></div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <h3 class="card-title">Sales by Region</h3>
+                         <div id="region-chart" class="chart-container">
+                            <div class="loader"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="manage-promotions" class="form-section hidden">
+                <h2>Manage Promotions</h2>
+                 <div class="flex justify-content-end mb-4">
+                    <div class="btn-group">
+                        <button class="btn-primary" id="add-promotion-btn">Add Promotion</button>
+                    </div>
+                </div>
+                <div class="promotions-grid" id="promotions-list">
+                    <div class="promotion-card">
+                        <h3>Summer Sale</h3>
+                        <p>Discount: 20%</p>
+                        <p>Start Date: 2024-06-01</p>
+                        <p>End Date: 2024-06-30</p>
+                        <div class="actions">
+                            <button class="btn-icon edit"><i class="fas fa-edit"></i></button>
+                            <button class="btn-icon delete"><i class="fas fa-trash"></i></button>
+                        </div>
+                    </div>
+<div class="promotion-card">
+                        <h3>Back to School Sale</h3>
+                        <p>Discount: 15%</p>
+                        <p>Start Date: 2024-08-15</p>
+                        <p>End Date: 2024-09-15</p>
+                        <div class="actions">
+                            <button class="btn-icon edit"><i class="fas fa-edit"></i></button>
+                            <button class="btn-icon delete"><i class="fas fa-trash"></i></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="add-sale-form" class="form-section hidden">
+                <h2>Add Sale</h2>
+                <form id="sale-form">
+                    <div class="form-group">
+                        <label for="sale-date">Date:</label>
+                        <input type="date" id="sale-date" name="sale-date" class="form-control" required>
+                        <div id="sale-date-error" class="error-message hidden"></div>
+                    </div>
+                    <div class="form-group">
+                        <label for="sale-order-id">Order ID:</label>
+                        <input type="text" id="sale-order-id" name="sale-order-id" class="form-control" required>
+                        <div id="sale-order-id-error" class="error-message hidden"></div>
+                    </div>
+                    <div class="form-group">
+                        <label for="sale-customer">Customer:</label>
+                        <select id="sale-customer" name="sale-customer" class="form-select" required>
+                            <option value="">Select Customer</option>
+                        </select>
+                         <div id="sale-customer-error" class="error-message hidden"></div>
+                    </div>
+                    <div class="form-group">
+                        <label for="sale-product">Product:</label>
+                        <select id="sale-product" name="sale-product" class="form-select" required>
+                            <option value="">Select Product</option>
+                        </select>
+                        <div id="sale-product-error" class="error-message hidden"></div>
+                    </div>
+                    <div class="form-group">
+                        <label for="sale-quantity">Quantity:</label>
+                        <input type="number" id="sale-quantity" name="sale-quantity" class="form-control" required min="1">
+                         <div id="sale-quantity-error" class="error-message hidden"></div>
+                    </div>
+                    <div class="form-group">
+                        <label for="sale-amount">Amount:</label>
+                        <input type="number" id="sale-amount" name="sale-amount" class="form-control" required min="0">
+                         <div id="sale-amount-error" class="error-message hidden"></div>
+                    </div>
+                    <div class="form-group">
+                        <label for="sale-status">Status:</label>
+                        <select id="sale-status" name="sale-status" class="form-select" required>
+                            <option value="">Select Status</option>
+                            <option value="pending">Pending</option>
+                            <option value="processing">Processing</option>
+                            <option value="shipped">Shipped</option>
+                            <option value="delivered">Delivered</option>
+                            <option value="cancelled">Cancelled</option>
+                        </select>
+                         <div id="sale-status-error" class="error-message hidden"></div>
+                    </div>
+                    <div class="text-right">
+                        <button type="button" id="cancel-sale-btn" class="btn-secondary">Cancel</button>
+                        <button type="submit" class="btn-primary">Add Sale</button>
+                    </div>
+                </form>
+            </div>
+
+            <div id="add-customer-form" class="form-section hidden">
+                <h2>Add Customer</h2>
+                <form id="customer-form">
+                    <div class="form-group">
+                        <label for="customer-name">Name:</label>
+                        <input type="text" id="customer-name" name="customer-name" class="form-control" required>
+                        <div id="customer-name-error" class="error-message hidden"></div>
+                    </div>
+                    <div class="form-group">
+                        <label for="customer-email">Email:</label>
+                        <input type="email" id="customer-email" name="customer-email" class="form-control" required>
+                        <div id="customer-email-error" class="error-message hidden"></div>
+                    </div>
+                    <div class="form-group">
+                        <label for="customer-phone">Phone:</label>
+                        <input type="tel" id="customer-phone" name="customer-phone" class="form-control" required>
+                        <div id="customer-phone-error" class="error-message hidden"></div>
+                    </div>
+                    <div class="form-group">
+                        <label for="customer-address">Address:</label>
+                        <input type="text" id="customer-address" name="customer-address" class="form-control" required>
+                        <div id="customer-address-error" class="error-message hidden"></div>
+                    </div>
+                    <div class="text-right">
+                        <button type="button" id="cancel-customer-btn" class="btn-secondary">Cancel</button>
+                        <button type="submit" class="btn-primary">Add Customer</button>
+                    </div>
+                </form>
+            </div>
+
+            <div id="add-promotion-form" class="form-section hidden">
+                <h2>Add Promotion</h2>
+                <form id="promotion-form">
+                    <div class="form-group">
+                        <label for="promotion-name">Name:</label>
+                        <input type="text" id="promotion-name" name="promotion-name" class="form-control" required>
+                        <div id="promotion-name-error" class="error-message hidden"></div>
+                    </div>
+                    <div class="form-group">
+                        <label for="promotion-discount">Discount (%):</label>
+                        <input type="number" id="promotion-discount" name="promotion-discount" class="form-control" required min="0" max="100">
+                        <div id="promotion-discount-error" class="error-message hidden"></div>
+                    </div>
+                    <div class="form-group">
+                        <label for="promotion-start-date">Start Date:</label>
+                        <input type="date" id="promotion-start-date" name="promotion-start-date" class="form-control" required>
+                        <div id="promotion-start-date-error" class="error-message hidden"></div>
+                    </div>
+                    <div class="form-group">
+                        <label for="promotion-end-date">End Date:</label>
+                        <input type="date" id="promotion-end-date" name="promotion-end-date" class="form-control" required>
+                        <div id="promotion-end-date-error" class="error-message hidden"></div>
+                    </div>
+                    <div class="form-group">
+                        <label for="promotion-products">Products:</label>
+                        <select id="promotion-products" name="promotion-products" class="form-select" multiple required>
+                            <option value="">Select Products</option>
+                        </select>
+                        <div id="promotion-products-error" class="error-message hidden"></div>
+                    </div>
+                    <div class="text-right">
+                        <button type="button" id="cancel-promotion-btn" class="btn-secondary">Cancel</button>
+                        <button type="submit" class="btn-primary">Add Promotion</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </main>
+    <footer class="bg-gray-800 text-white text-center py-6 text-sm">
+        &copy; 2025 PRIME FARMS Ltd. All rights reserved. | Powered by Aphrodice
+    </footer>
+    <script src="https://unpkg.com/@themesberg/flowbite@1.7.1/dist/flowbite.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        const viewSalesBtn = document.getElementById("view-sales-btn");
+        const manageCustomersBtn = document.getElementById("manage-customers-btn");
+        const trackPerformanceBtn = document.getElementById("track-performance-btn");
+        const managePromotionsBtn = document.getElementById("manage-promotions-btn");
+
+        const viewSalesSection = document.getElementById("view-sales");
+        const manageCustomersSection = document.getElementById("manage-customers");
+        const trackPerformanceSection = document.getElementById("track-performance");
+        const managePromotionsSection = document.getElementById("manage-promotions");
+
+        const addSaleBtn = document.getElementById("add-sale-btn");
+        const addCustomerBtn = document.getElementById("add-customer-btn");
+        const addPromotionBtn = document.getElementById("add-promotion-btn");
+
+        const addSaleForm = document.getElementById("add-sale-form");
+        const addCustomerForm = document.getElementById("add-customer-form");
+        const addPromotionForm = document.getElementById("add-promotion-form");
+
+        const cancelSaleBtn = document.getElementById("cancel-sale-btn");
+        const cancelCustomerBtn = document.getElementById("cancel-customer-btn");
+        const cancelPromotionBtn = document.getElementById("cancel-promotion-btn");
+
+        const saleForm = document.getElementById("sale-form");
+        const customerForm = document.getElementById("customer-form");
+        const promotionForm = document.getElementById("promotion-form");
+
+        const totalSalesDisplay = document.getElementById("total-sales");
+        const salesTodayDisplay = document.getElementById("sales-today");
+        const ytdSalesDisplay = document.getElementById("ytd-sales");
+        const topProductDisplay = document.getElementById("top-product");
+
+        // Get dropdowns for forms
+        const saleCustomerDropdown = document.getElementById("sale-customer");
+        const saleProductDropdown = document.getElementById("sale-product");
+        const promotionProductsDropdown = document.getElementById("promotion-products");
+
+        let sales = [
+            { date: "2024-07-28", orderId: "ORD-12345", customer: "John Doe", product: "Product A", quantity: 10, amount: 100.00, status: "Shipped" },
+            { date: "2024-07-27", orderId: "ORD-12346", customer: "Jane Smith", product: "Product B", quantity: 5, amount: 50.00, status: "Pending" },
+        ];
+        let customers = [
+            { id: "cust-1", name: "John Doe", email: "john.doe@example.com", phone: "123-456-7890", address: "123 Main St" },
+            { id: "cust-2", name: "Jane Smith", email: "jane.smith@example.com", phone: "987-654-3210", address: "456 Oak Ave" },
+        ];
+        let products = [
+            { id: "prod-1", name: "Product A" },
+            { id: "prod-2", name: "Product B" },
+            { id: "prod-3", name: "Product C" },
+        ];
+        let promotions = [
+            { id: "promo-1", name: "Summer Sale", discount: 20, startDate: "2024-06-01", endDate: "2024-06-30", products: ["prod-1", "prod-2"] },
+            { id: "promo-2", name: "Back to School Sale", discount: 15, startDate: "2024-08-15", endDate: "2024-09-15", products: ["prod-3"] },
+        ];
+
+        let salesChartInstance = null;
+        let regionChartInstance = null;
+
+        function initEventListeners() {
+            viewSalesBtn.addEventListener("click", showViewSales);
+            manageCustomersBtn.addEventListener("click", showManageCustomers);
+            trackPerformanceBtn.addEventListener("click", showTrackPerformance);
+            managePromotionsBtn.addEventListener("click", showManagePromotions);
+
+            addSaleBtn.addEventListener("click", () => {
+                showAddSaleForm();
+                populateSaleFormDropdowns();
+            });
+            addCustomerBtn.addEventListener("click", showAddCustomerForm);
+            addPromotionBtn.addEventListener("click", () => {
+                showAddPromotionForm();
+                populatePromotionFormDropdown();
+            });
+
+            cancelSaleBtn.addEventListener("click", hideAllForms);
+            cancelCustomerBtn.addEventListener("click", hideAllForms);
+            cancelPromotionBtn.addEventListener("click", hideAllForms);
+
+            saleForm.addEventListener("submit", handleSaleSubmit);
+            customerForm.addEventListener("submit", handleCustomerSubmit);
+            promotionForm.addEventListener("submit", handlePromotionSubmit);
+        }
+
+        function updateSalesOverview() {
+            let totalSales = sales.reduce((sum, sale) => sum + sale.amount, 0);
+            let salesToday = sales.filter(sale => sale.date === new Date().toISOString().split("T")[0])
+                .reduce((sum, sale) => sum + sale.amount, 0);
+            let ytdSales = sales.filter(sale => new Date(sale.date).getFullYear() === new Date().getFullYear())
+                .reduce((sum, sale) => sum + sale.amount, 0);
+
+            let productSales = {};
+            sales.forEach(sale => {
+                if (productSales[sale.product]) {
+                    productSales[sale.product] += sale.quantity;
+                } else {
+                    productSales[sale.product] = sale.quantity;
+                }
+            });
+            let topProduct = Object.keys(productSales).length > 0 ? Object.keys(productSales).reduce((a, b) => productSales[a] > productSales[b] ? a : b) : "N/A";
+
+            totalSalesDisplay.textContent = formatCurrency(totalSales);
+            salesTodayDisplay.textContent = formatCurrency(salesToday);
+            ytdSalesDisplay.textContent = formatCurrency(ytdSales);
+            topProductDisplay.textContent = topProduct;
+        }
+
+        function formatCurrency(amount) {
+            return amount.toLocaleString("en-US", { style: "currency", currency: "USD" });
+        }
+
+        function showError(inputElement, message) {
+            const errorElementId = inputElement.id + "-error";
+            const errorElement = document.getElementById(errorElementId);
+            errorElement.textContent = message;
+            errorElement.classList.remove("hidden");
+            inputElement.classList.add("border-red-500");
+        }
+
+        function hideError(inputElement) {
+            const errorElementId = inputElement.id + "-error";
+            const errorElement = document.getElementById(errorElementId);
+            errorElement.classList.add("hidden");
+            inputElement.classList.remove("border-red-500");
+        }
+
+        function validateForm(form) {
+            let isValid = true;
+            const fields = Array.from(form.querySelectorAll('input, select'));
+
+            fields.forEach(input => {
+                hideError(input);
+                if (input.hasAttribute('required') && !input.value.trim()) {
+                    const fieldName = input.name.replace(/sale-|customer-|promotion-/g, '').replace(/-/g, ' ');
+                    showError(input, `${fieldName.charAt(0).toUpperCase() + fieldName.slice(1)} is required`);
+                    isValid = false;
+                }
+                if (input.type === 'number' && input.value < (input.min || 0)) {
+                    const fieldName = input.name.replace(/sale-|customer-|promotion-/g, '').replace(/-/g, ' ');
+                    showError(input, `${fieldName.charAt(0).toUpperCase() + fieldName.slice(1)} must be greater than or equal to ${input.min || 0}`);
+                    isValid = false;
+                }
+                if (input.type === 'email' && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(input.value)) {
+                    showError(input, 'Invalid email format');
+                    isValid = false;
+                }
+                 if (input.type === 'date') {
+                    const selectedDate = new Date(input.value);
+                    const today = new Date();
+                    today.setHours(0,0,0,0);
+                    if (selectedDate < today) {
+                         showError(input, `${input.name.charAt(0).toUpperCase() + input.name.slice(1)} cannot be in the past`);
+                         isValid = false;
+                    }
+                }
+            });
+            return isValid;
+        }
+
+        function handleSaleSubmit(event) {
+            event.preventDefault();
+            if (!validateForm(saleForm)) {
+                return;
+            }
+
+            const saleDate = document.getElementById("sale-date").value;
+            const saleOrderId = document.getElementById("sale-order-id").value;
+            const saleCustomer = document.getElementById("sale-customer").value;
+            const saleProduct = document.getElementById("sale-product").value;
+            const saleQuantity = parseInt(document.getElementById("sale-quantity").value);
+            const saleAmount = parseFloat(document.getElementById("sale-amount").value);
+            const saleStatus = document.getElementById("sale-status").value;
+
+            const newSale = {
+                date: saleDate,
+                orderId: saleOrderId,
+                customer: saleCustomer,
+                product: saleProduct,
+                quantity: saleQuantity,
+                amount: saleAmount,
+                status: saleStatus,
+            };
+
+            sales.push(newSale);
+            updateSalesOverview();
+            renderSalesTable();
+            hideAllForms();
+            saleForm.reset();
+            showMessage("Success", "Sale added successfully.");
+        }
+
+        function handleCustomerSubmit(event) {
+            event.preventDefault();
+             if (!validateForm(customerForm)) {
+                return;
+            }
+
+            const customerName = document.getElementById("customer-name").value;
+            const customerEmail = document.getElementById("customer-email").value;
+            const customerPhone = document.getElementById("customer-phone").value;
+            const customerAddress = document.getElementById("customer-address").value;
+
+            const newCustomer = {
+                id: `cust-${Date.now()}`,
+                name: customerName,
+                email: customerEmail,
+                phone: customerPhone,
+                address: customerAddress,
+            };
+
+            customers.push(newCustomer);
+            renderCustomersTable();
+            hideAllForms();
+            customerForm.reset();
+            showMessage("Success", "Customer added successfully.");
+            populateSaleFormDropdowns(); //update dropdown
+        }
+
+        function handlePromotionSubmit(event) {
+            event.preventDefault();
+            if (!validateForm(promotionForm)) {
+                return;
+            }
+
+            const promotionName = document.getElementById("promotion-name").value;
+            const promotionDiscount = parseInt(document.getElementById("promotion-discount").value);
+            const promotionStartDate = document.getElementById("promotion-start-date").value;
+            const promotionEndDate = document.getElementById("promotion-end-date").value;
+            const promotionProducts = Array.from(document.getElementById("promotion-products").selectedOptions).map(option => option.value);
+
+            const newPromotion = {
+                id: `promo-${Date.now()}`,
+                name: promotionName,
+                discount: promotionDiscount,
+                startDate: promotionStartDate,
+                endDate: promotionEndDate,
+                products: promotionProducts,
+            };
+
+            promotions.push(newPromotion);
+            renderPromotionsList();
+            hideAllForms();
+            promotionForm.reset();
+            showMessage("Success", "Promotion added successfully.");
+        }
+
+        function showViewSales() {
+            hideAllForms();
+            viewSalesSection.classList.remove("hidden");
+            renderSalesTable();
+        }
+
+        function showManageCustomers() {
+            hideAllForms();
+            manageCustomersSection.classList.remove("hidden");
+            renderCustomersTable();
+        }
+
+        function showTrackPerformance() {
+            hideAllForms();
+            trackPerformanceSection.classList.remove("hidden");
+            renderSalesChart();
+            renderRegionChart();
+        }
+
+        function showManagePromotions() {
+            hideAllForms();
+            managePromotionsSection.classList.remove("hidden");
+            renderPromotionsList();
+        }
+
+        function showAddSaleForm() {
+            hideAllForms();
+            addSaleForm.classList.remove("hidden");
+        }
+
+        function showAddCustomerForm() {
+            hideAllForms();
+            addCustomerForm.classList.remove("hidden");
+        }
+
+        function showAddPromotionForm() {
+            hideAllForms();
+            addPromotionForm.classList.remove("hidden");
+        }
+
+        function hideAllForms() {
+            viewSalesSection.classList.add("hidden");
+            manageCustomersSection.classList.add("hidden");
+            trackPerformanceSection.classList.add("hidden");
+            managePromotionsSection.classList.add("hidden");
+            addSaleForm.classList.add("hidden");
+            addCustomerForm.classList.add("hidden");
+            addPromotionForm.classList.add("hidden");
+             if (salesChartInstance) {
+                salesChartInstance.destroy();
+                salesChartInstance = null;
+             }
+              if (regionChartInstance) {
+                regionChartInstance.destroy();
+                regionChartInstance = null;
+             }
+        }
+
+        function showMessage(title, text) {
+            const messageContainer = document.createElement("div");
+            messageContainer.classList.add("mt-4", "p-4", "rounded-md");
+            messageContainer.style.backgroundColor = title === "Success" ? "#d4edda" : "#f8d7da";
+            messageContainer.style.color = title === "Success" ? "#155724" : "#721c24";
+            const titleElement = document.createElement("h4");
+            titleElement.classList.add("font-semibold");
+            titleElement.textContent = title;
+            const textElement = document.createElement("p");
+            textElement.textContent = text;
+            messageContainer.appendChild(titleElement);
+            messageContainer.appendChild(textElement);
+
+            const mainContainer = document.querySelector("main .container");
+            mainContainer.appendChild(messageContainer);
+
+            setTimeout(() => {
+                messageContainer.remove();
+            }, 3000);
+        }
+
+        // Populate dropdowns in Add Sale Form
+        function populateSaleFormDropdowns() {
+            saleCustomerDropdown.innerHTML = '<option value="">Select Customer</option>';
+            customers.forEach(customer => {
+                const option = document.createElement("option");
+                option.value = customer.name;
+                option.textContent = customer.name;
+                saleCustomerDropdown.appendChild(option);
+            });
+
+            saleProductDropdown.innerHTML = '<option value="">Select Product</option>';
+            products.forEach(product => {
+                const option = document.createElement("option");
+                option.value = product.name;
+                option.textContent = product.name;
+                saleProductDropdown.appendChild(option);
+            });
+        }
+
+        // Populate dropdown in Add Promotion Form
+        function populatePromotionFormDropdown() {
+            promotionProductsDropdown.innerHTML = '<option value="">Select Products</option>';
+            products.forEach(product => {
+                const option = document.createElement("option");
+                option.value = product.id;
+                option.textContent = product.name;
+                promotionProductsDropdown.appendChild(option);
+            });
+        }
+
+        function renderSalesTable() {
+            const salesTableBody = document.querySelector("#sales-table tbody");
+            salesTableBody.innerHTML = "";
+            sales.forEach(sale => {
+                const row = salesTableBody.insertRow();
+                const dateCell = row.insertCell();
+                const orderIdCell = row.insertCell();
+                const customerCell = row.insertCell();
+                const productCell = row.insertCell();
+                const quantityCell = row.insertCell();
+                const amountCell = row.insertCell();
+                const statusCell = row.insertCell();
+                const actionsCell = row.insertCell();
+
+                dateCell.textContent = sale.date;
+                orderIdCell.textContent = sale.orderId;
+                customerCell.textContent = sale.customer;
+                productCell.textContent = sale.product;
+                quantityCell.textContent = sale.quantity;
+                amountCell.textContent = formatCurrency(sale.amount);
+                statusCell.textContent = sale.status;
+                actionsCell.innerHTML = `
+                    <div class="btn-group">
+                        <button class="btn-icon edit" onclick="editSale('${sale.orderId}')"><i class="fas fa-edit"></i></button>
+                        <button class="btn-icon delete" onclick="deleteSale('${sale.orderId}')"><i class="fas fa-trash"></i></button>
+                    </div>
+                `;
+            });
+        }
+
+        function renderCustomersTable() {
+            const customerTableBody = document.querySelector("#customer-table tbody");
+            customerTableBody.innerHTML = "";
+            customers.forEach(customer => {
+                const row = customerTableBody.insertRow();
+                const nameCell = row.insertCell();
+                const emailCell = row.insertCell();
+                const phoneCell = row.insertCell();
+                const addressCell = row.insertCell();
+                const ordersCell = row.insertCell();
+                const actionsCell = row.insertCell();
+
+                nameCell.textContent = customer.name;
+                emailCell.textContent = customer.email;
+                phoneCell.textContent = customer.phone;
+                addressCell.textContent = customer.address;
+                ordersCell.textContent = "N/A";
+                actionsCell.innerHTML = `
+                    <div class="btn-group">
+                        <button class="btn-icon edit" onclick="editCustomer('${customer.id}')"><i class="fas fa-edit"></i></button>
+                        <button class="btn-icon delete" onclick="deleteCustomer('${customer.id}')"><i class="fas fa-trash"></i></button>
+                    </div>
+                `;
+            });
+        }
+
+        function renderPromotionsList() {
+            const promotionsList = document.getElementById("promotions-list");
+            promotionsList.innerHTML = "";
+            promotions.forEach(promotion => {
+                const promotionCard = document.createElement("div");
+                promotionCard.className = "promotion-card";
+                promotionCard.innerHTML = `
+                    <h3>${promotion.name}</h3>
+                    <p>Discount: ${promotion.discount}%</p>
+                    <p>Start Date: ${promotion.startDate}</p>
+                    <p>End Date: ${promotion.endDate}</p>
+                    <p>Products: ${promotion.products.map(id => products.find(p => p.id === id)?.name || 'Unknown').join(', ')}</p>
+                    <div class="actions">
+                        <button class="btn-icon edit" onclick="editPromotion('${promotion.id}')"><i class="fas fa-edit"></i></button>
+                        <button class="btn-icon delete" onclick="deletePromotion('${promotion.id}')"><i class="fas fa-trash"></i></button>
+                    </div>
+                `;
+                promotionsList.appendChild(promotionCard);
+            });
+        }
+
+        function editSale(orderId) {
+            const sale = sales.find(s => s.orderId === orderId);
+            if (!sale) return;
+
+            showAddSaleForm();
+            populateSaleFormDropdowns();
+
+            document.getElementById("sale-date").value = sale.date;
+            document.getElementById("sale-order-id").value = sale.orderId;
+            document.getElementById("sale-customer").value = sale.customer;
+            document.getElementById("sale-product").value = sale.product;
+            document.getElementById("sale-quantity").value = sale.quantity;
+            document.getElementById("sale-amount").value = sale.amount;
+            document.getElementById("sale-status").value = sale.status;
+
+            // Change form submit button text
+            const submitButton = saleForm.querySelector('button[type="submit"]');
+            submitButton.textContent = "Update Sale";
+
+            // Store the original orderId for updating
+            saleForm.dataset.editingOrderId = orderId;
+        }
+
+        function editCustomer(id) {
+            const customer = customers.find(c => c.id === id);
+            if (!customer) return;
+
+            showAddCustomerForm();
+
+            document.getElementById("customer-name").value = customer.name;
+            document.getElementById("customer-email").value = customer.email;
+            document.getElementById("customer-phone").value = customer.phone;
+            document.getElementById("customer-address").value = customer.address;
+
+            const submitButton = customerForm.querySelector('button[type="submit"]');
+            submitButton.textContent = "Update Customer";
+
+            customerForm.dataset.editingCustomerId = id;
+        }
+
+        function editPromotion(id) {
+            const promotion = promotions.find(p => p.id === id);
+            if (!promotion) return;
+
+            showAddPromotionForm();
+            populatePromotionFormDropdown();
+
+            document.getElementById("promotion-name").value = promotion.name;
+            document.getElementById("promotion-discount").value = promotion.discount;
+            document.getElementById("promotion-start-date").value = promotion.startDate;
+            document.getElementById("promotion-end-date").value = promotion.endDate;
+            // Select the products in the multiselect
+            const productOptions = Array.from(promotionProductsDropdown.options);
+            productOptions.forEach(option => {
+                if (promotion.products.includes(option.value)) {
+                    option.selected = true;
+                } else {
+                    option.selected = false;
+                }
+            });
+
+            const submitButton = promotionForm.querySelector('button[type="submit"]');
+            submitButton.textContent = "Update Promotion";
+
+            promotionForm.dataset.editingPromotionId = id;
+        }
+
+        function deleteSale(orderId) {
+            if (confirm("Are you sure you want to delete this sale?")) {
+                sales = sales.filter(s => s.orderId !== orderId);
+                updateSalesOverview();
+                renderSalesTable();
+                showMessage("Success", "Sale deleted successfully.");
+            }
+        }
+
+         function deleteCustomer(id) {
+            if (confirm("Are you sure you want to delete this customer?")) {
+                customers = customers.filter(c => c.id !== id);
+                renderCustomersTable();
+                showMessage("Success", "Customer deleted successfully.");
+                 populateSaleFormDropdowns(); //remove deleted customer from dropdown
+            }
+        }
+
+        function deletePromotion(id) {
+            if (confirm("Are you sure you want to delete this promotion?")) {
+                promotions = promotions.filter(p => p.id !== id);
+                renderPromotionsList();
+                showMessage("Success", "Promotion deleted successfully.");
+            }
+        }
+
+        function renderSalesChart() {
+            const ctx = document.getElementById('sales-chart').getContext('2d');
+             document.getElementById('sales-chart').innerHTML = '<div class="loader"></div>';
+
+            const monthlySales = {};
+            sales.forEach(sale => {
+                const month = new Date(sale.date).toLocaleString('default', { month: 'long' });
+                if (monthlySales[month]) {
+                    monthlySales[month] += sale.amount;
+                } else {
+                    monthlySales[month] = sale.amount;
+                }
+            });
+
+            const sortedMonths = Object.keys(monthlySales).sort((a, b) => {
+                const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+                return monthNames.indexOf(a) - monthNames.indexOf(b);
+            });
+
+            const monthlySalesData = sortedMonths.map(month => monthlySales[month]);
+
+            if (salesChartInstance) {
+                salesChartInstance.destroy();
+            }
+
+            salesChartInstance = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: sortedMonths,
+                    datasets: [{
+                        label: 'Monthly Sales',
+                        data: monthlySalesData,
+                        backgroundColor: '#3b82f6',
+                        borderColor: '#3b82f6',
+                        borderWidth: 2,
+                        fill: false,
+                        pointRadius: 5,
+                        pointHoverRadius: 7,
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: function (value) {
+                                    return formatCurrency(value);
+                                }
+                            }
+                        },
+                    },
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function (context) {
+                                     let label = context.dataset.label || '';
+                                    if (label) {
+                                        label += ': ';
+                                    }
+                                    if (context.parsed.y !== null) {
+                                        label += formatCurrency(context.parsed.y);
+                                    }
+                                    return label;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function renderRegionChart() {
+            const ctx = document.getElementById('region-chart').getContext('2d');
+            document.getElementById('region-chart').innerHTML = '<div class="loader"></div>';
+
+            const customerRegions = {};
+            customers.forEach(customer => {
+                const region = customer.address.split(', ').pop();
+                if (customerRegions[region]) {
+                    customerRegions[region]++;
+                } else {
+                    customerRegions[region] = 1;
+                }
+            });
+
+            const regionLabels = Object.keys(customerRegions);
+            const regionCounts = regionLabels.map(region => customerRegions[region]);
+             if (regionChartInstance) {
+                regionChartInstance.destroy();
+            }
+
+            regionChartInstance = new Chart(ctx, {
+                type: 'pie',
+                data: {
+                    labels: regionLabels,
+                    datasets: [{
+                        label: 'Customers by Region',
+                        data: regionCounts,
+                        backgroundColor: [
+                            '#3b82f6',
+                            '#22c55e',
+                            '#ef4444',
+                            '#f59e0b',
+                            '#8b5cf6',
+                        ],
+                        hoverOffset: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        },
+                         tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    let label = context.label || '';
+                                    if (label) {
+                                        label += ': ';
+                                    }
+                                    const value = context.formattedValue;
+                                    label += value;
+                                    return label;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Initial load
+        document.addEventListener("DOMContentLoaded", () => {
+            initEventListeners();
+            updateSalesOverview();
+            populateSaleFormDropdowns();
+            renderSalesTable();
+            renderCustomersTable();
+            renderPromotionsList();
+            const urlParams = new URLSearchParams(window.location.search);
+            const initialView = urlParams.get('view');
+
+            if (initialView === 'sales') {
+                showViewSales();
+            } else if (initialView === 'customers') {
+                showManageCustomers();
+            } else if (initialView === 'performance') {
+                showTrackPerformance();
+            } else if (initialView === 'promotions') {
+                showManagePromotions();
+            }
+
+            document.getElementById('hamburger').addEventListener('click', function() {
+                this.classList.toggle('open');
+                document.getElementById('mobileMenu').classList.toggle('hidden');
+            });
+
+            //handle form edits.
+            saleForm.addEventListener('submit', (event) => {
+                event.preventDefault();
+
+                const orderId = saleForm.dataset.editingOrderId;
+
+                const saleDate = document.getElementById("sale-date").value;
+                const saleOrderId = document.getElementById("sale-order-id").value;
+                const saleCustomer = document.getElementById("sale-customer").value;
+                const saleProduct = document.getElementById("sale-product").value;
+                const saleQuantity = parseInt(document.getElementById("sale-quantity").value);
+                const saleAmount = parseFloat(document.getElementById("sale-amount").value);
+                const saleStatus = document.getElementById("sale-status").value;
+
+                if (orderId) {
+                    //update
+                    const index = sales.findIndex(s => s.orderId === orderId);
+                    if (index !== -1) {
+                        sales[index] = {
+                            date: saleDate,
+                            orderId: saleOrderId,
+                            customer: saleCustomer,
+                            product: saleProduct,
+                            quantity: saleQuantity,
+                            amount: saleAmount,
+                            status: saleStatus
+                        };
+                         showMessage("Success", "Sale updated successfully.");
+                    }
+                    else{
+                         showMessage("Error", "Sale to update not found.");
+                    }
+                     const submitButton = saleForm.querySelector('button[type="submit"]');
+                     submitButton.textContent = "Add Sale";
+                     delete saleForm.dataset.editingOrderId;
+
+                }
+                else{
+                    handleSaleSubmit(event);
+                }
+                renderSalesTable();
+                hideAllForms();
+                saleForm.reset();
+            });
+
+            customerForm.addEventListener('submit', (event) => {
+                event.preventDefault();
+                const customerId = customerForm.dataset.editingCustomerId;
+                const customerName = document.getElementById("customer-name").value;
+                const customerEmail = document.getElementById("customer-email").value;
+                const customerPhone = document.getElementById("customer-phone").value;
+                const customerAddress = document.getElementById("customer-address").value;
+                if (customerId)
+                {
+                    const index = customers.findIndex(c => c.id === customerId);
+                    if (index !== -1)
+                    {
+                         customers[index] =  {
+                            id: customerId,
+                            name: customerName,
+                            email: customerEmail,
+                            phone: customerPhone,
+                            address: customerAddress,
+                        };
+                        showMessage("Success", "Customer updated successfully.");
+                    }
+                    else{
+                        showMessage("Error", "Customer to update not found.");
+                    }
+                    const submitButton = customerForm.querySelector('button[type="submit"]');
+                    submitButton.textContent = "Add Customer";
+                    delete customerForm.dataset.editingCustomerId;
+                }
+                else{
+                     handleCustomerSubmit(event);
+                }
+                renderCustomersTable();
+                hideAllForms();
+                customerForm.reset();
+            });
+
+            promotionForm.addEventListener('submit', (event) => {
+                event.preventDefault();
+                 const promotionId = promotionForm.dataset.editingPromotionId;
+                 const promotionName = document.getElementById("promotion-name").value;
+                const promotionDiscount = parseInt(document.getElementById("promotion-discount").value);
+                const promotionStartDate = document.getElementById("promotion-start-date").value;
+                const promotionEndDate = document.getElementById("promotion-end-date").value;
+                const promotionProducts = Array.from(document.getElementById("promotion-products").selectedOptions).map(option => option.value);
+
+                if (promotionId)
+                {
+                    const index = promotions.findIndex(p => p.id === promotionId);
+                    if (index !== -1)
+                    {
+                         promotions[index] =  {
+                            id: promotionId,
+                            name: promotionName,
+                            discount: promotionDiscount,
+                            startDate: promotionStartDate,
+                            endDate: promotionEndDate,
+                            products: promotionProducts,
+                        };
+                        showMessage("Success", "Promotion updated successfully.");
+                    }
+                    else{
+                         showMessage("Error", "Promotion to update not found.");
+                    }
+                    const submitButton = promotionForm.querySelector('button[type="submit"]');
+                    submitButton.textContent = "Add Promotion";
+                    delete promotionForm.dataset.editingPromotionId;
+                }
+                else{
+                     handlePromotionSubmit(event);
+                }
+                renderPromotionsList();
+                hideAllForms();
+                promotionForm.reset();
+            });
+        });
+    </script>
+</body>
+</html>
