@@ -2,23 +2,68 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <link rel="icon" type="image/png" href="/logo.png">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" href="logo.png" type="image/x-icon">
     <title>Login - PRIME FARMS Ltd</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Segoe+UI:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
         body {
-            font-family: 'Roboto', sans-serif;
+            font-family: 'Segoe UI', sans-serif;
+            background-color: #001a33;
+            margin: 0;
+            padding-top: 80px;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
         }
-        /* Short Hamburger Button Styles */
+        .card {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+            max-width: 400px;
+            margin: auto;
+        }
+        input, button {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            font-size: 14px;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+        }
+        input:focus {
+            outline: none;
+            border-color: #007bff;
+            box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+        }
+        button {
+            background: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+        .error {
+            color: #f90303;
+        }
+        footer {
+            margin-top: auto;
+            background-color: #003366;
+            color: #ffffff;
+        }
         #hamburger {
             width: 45px;
             padding: 6px;
             flex-direction: column;
             justify-content: space-around;
-            cursor: pointer;
         }
         #hamburger span {
             width: 100%;
@@ -39,202 +84,160 @@
         .open .line-3 {
             transform: rotate(-45deg) translateY(-0.4rem);
         }
-        #mobileMenu {
+        .password-input-wrapper {
+            position: relative;
+        }
+        .password-toggle-btn {
             position: absolute;
-            top: 60px;
-            left: 0;
-            width: 100%;
-            background-color: #007bff;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-            z-index: 50;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0;
+            outline: none;
         }
-        #mobileMenu a {
-            color: white;
-            padding: 12px 16px;
-            display: block;
-            text-decoration: none;
+        .loading-spinner {
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-top: 3px solid #fff;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            animation: spin 1s linear infinite;
+            margin-left: 8px;
         }
-        #mobileMenu a:hover {
-            background-color: #0056b3;
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
-
-    .login-container {
-      background-color: #f0f4f8;
-      padding: 2rem;
-      border-radius: 1rem;
-      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-      max-width: 400px;
-      width: 90%;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-    .login-title {
-      font-size: 2rem;
-      font-weight: bold;
-      color: #1a5632;
-      margin-bottom: 1.5rem;
-      text-align: center;
-    }
-    .input-group {
-      margin-bottom: 1.5rem;
-      width: 100%;
-    }
-    .input-group label {
-      display: block;
-      margin-bottom: 0.5rem;
-      color: #374151;
-      font-weight: medium;
-      font-size: 1rem;
-    }
-    .input-group input {
-      width: 100%;
-      padding: 0.75rem;
-      border-radius: 0.5rem;
-      border: 1px solid #e0e0e0;
-      font-size: 1rem;
-      transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
-    }
-    .input-group input:focus {
-      outline: none;
-      border-color: #34d399;
-      box-shadow: 0 0 0 3px rgba(52, 211, 153, 0.25);
-    }
-    .forgot-password {
-      display: block;
-      text-align: right;
-      margin-bottom: 1.5rem;
-      color: #6b7280;
-      font-size: 0.9rem;
-      transition: color 0.2s ease-in-out;
-    }
-    .forgot-password:hover {
-      color: #34d399;
-    }
-    .login-button {
-      width: 100%;
-      padding: 0.75rem;
-      border-radius: 0.5rem;
-      background-color: #16a34a;
-      color: white;
-      font-size: 1.25rem;
-      font-weight: bold;
-      border: none;
-      cursor: pointer;
-      transition: background-color 0.2s ease-in-out, transform 0.1s ease;
-    }
-    .login-button:hover {
-      background-color: #15803d;
-      transform: translateY(-2px);
-    }
-    .login-button:active {
-      background-color: #14532d;
-      transform: translateY(0);
-    }
-    .signup-link {
-      text-align: center;
-      margin-top: 1.5rem;
-      color: #6b7280;
-      font-size: 0.9rem;
-    }
-    .signup-link a {
-      color: #34d399;
-      font-weight: medium;
-      transition: color 0.2s ease-in-out;
-    }
-    .signup-link a:hover {
-      color: #1a5632;
-    }
-    .logo-container {
-        margin-bottom: 1rem;
-        display: flex;
-        justify-content: center;
-    }
-
-    /* New styles for header and footer */
-    header {
-        background-color: #003366 !important; /* Dark Blue from the logo */
-    }
-    #mobileMenu {
-        background-color: #003366 !important;
-    }
-    footer {
-        background-color: #003366 !important; /* Dark Blue from the logo */
-        color: #ffffff !important;
-    }
+        header {
+            background-color: #003366;
+        }
+        #mobileMenu {
+            background-color: #003366;
+        }
     </style>
 </head>
-<body class="bg-gray-100 min-h-screen flex flex-col">
-    <header class="bg-blue-600 shadow-lg w-full fixed top-0 left-0 z-50">
-        <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
-            <div class="flex items-center space-x-3">
-                <img src="logo.png" alt="PRIME FARMS Ltd" class="h-10 w-10 rounded-full border-2 border-blue-400 shadow-sm" />
-                <h1 class="text-2xl font-extrabold text-white tracking-wide">PRIME FARMS Ltd</h1>
+<body>
+    <header class="bg-blue-900 shadow-lg w-full fixed top-0 left-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
+            <div class="flex items-center space-x-2 md:space-x-3">
+                <img src="logo.png" alt="PRIME FARMS Ltd Logo" class="h-10 w-10 rounded-full border-2 border-blue-400 shadow-sm" />
+                <h1 class="text-sm md:text-2xl font-extrabold text-white tracking-wide whitespace-nowrap">
+                    PRIME FARMS Ltd
+                </h1>
             </div>
-            <div class="hidden md:flex space-x-6">
-                <a href="index.html" class="text-white font-medium hover:underline transition">Home</a>
-                <a href="about.html" class="text-gray-300 font-medium hover:text-white transition">About Us</a>
-                <a href="products.html" class="text-gray-300 font-medium hover:text-white transition">Products</a>
-                <a href="order.html" class="text-gray-300 font-medium hover:text-white transition">Order Online</a>
-                <a href="blog.html" class="text-gray-300 font-medium hover:text-white transition">Blog</a>
-                <a href="contact.html" class="text-gray-300 font-medium hover:text-white transition">Contact</a>
-                <a href="gallery.html" class="text-gray-300 font-medium hover:text-white transition">Gallery</a>
-                <a href="login.html" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-full transition-colors duration-300">Admin Panel</a>
-            </div>
-            <button id="hamburger" class="md:hidden flex flex-col space-y-1 p-2 rounded focus:outline-none focus:ring-blue-500">
+            <button id="hamburger" class="block md:hidden flex flex-col space-y-1 p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500">
                 <span class="w-5 h-0.5 bg-white line line-1"></span>
                 <span class="w-5 h-0.5 bg-white line line-2"></span>
                 <span class="w-5 h-0.5 bg-white line line-3"></span>
             </button>
+            <nav class="hidden md:flex space-x-6">
+                <a href="index.html" class="text-white font-medium hover:underline transition text-lg">Home</a>
+                <a href="about.html" class="text-white font-medium hover:underline transition text-lg">About Us</a>
+                <a href="products.html" class="text-white font-medium hover:underline transition text-lg">Products</a>
+                <a href="order.html" class="text-white font-medium hover:underline transition text-lg">Orders</a>
+                <a href="blog.html" class="text-white font-medium hover:underline transition text-lg">Blog</a>
+                <a href="contact.html" class="text-white font-medium hover:underline transition text-lg">Contact</a>
+                <a href="gallery.html" class="text-white font-medium hover:underline transition text-lg">Gallery</a>
+                
+            </nav>
         </div>
-        <div id="mobileMenu" class="md:hidden hidden bg-blue-600">
-            <nav class="flex flex-col">
-                <a href="index.html" class="text-white font-medium hover:underline transition px-4 py-3">Home</a>
-                <a href="about.html" class="text-gray-300 font-medium hover:bg-gray-700 transition px-4 py-3">About Us</a>
-                <a href="products.html" class="text-gray-300 font-medium hover:bg-gray-700 transition px-4 py-3">Products</a>
-                <a href="order.html" class="text-gray-300 font-medium hover:bg-gray-700 transition px-4 py-3">Order Online</a>
-                <a href="blog.html" class="text-gray-300 font-medium hover:bg-gray-700 transition px-4 py-3">Blog</a>
-                <a href="contact.html" class="text-gray-300 font-medium hover:bg-gray-700 transition px-4 py-3">Contact</a>
-                <a href="gallery.html" class="text-gray-300 font-medium hover:bg-gray-700 transition px-4 py-3">Gallery</a>
-                <a href="login.html" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-full transition-colors duration-300">Admin Panel</a>
+        <div id="mobileMenu" class="md:hidden hidden px-4 pb-4 bg-blue-900">
+            <nav class="flex flex-col space-y-3">
+                <a href="index.html" class="text-white font-medium hover:underline transition">Home</a>
+                <a href="about.html" class="text-white font-medium hover:underline transition">About Us</a>
+                <a href="products.html" class="text-white font-medium hover:underline transition">Products</a>
+                <a href="order.html" class="text-white font-medium hover:underline transition">Orders</a>
+                <a href="blog.html" class="text-white font-medium hover:underline transition">Blog</a>
+                <a href="contact.html" class="text-white font-medium hover:underline transition">Contact</a>
+                <a href="gallery.html" class="text-white font-medium hover:underline transition">Gallery</a>
+              
             </nav>
         </div>
     </header>
 
-    <main class="flex-grow pt-16 flex items-center justify-center">
-        <div class="login-container">
-            <div class="logo-container">
-                <img src="logo.png" alt="PRIME FARMS Ltd" class="h-20 w-20 rounded-full border-2 border-blue-400 shadow-sm" />
-            </div>
-            <h2 class="login-title">Login</h2>
-            <form class="w-full">
+    <main class="flex items-center justify-center p-6 w-full flex-grow">
+        <div class="card shadow-2xl rounded-3xl p-10 w-full text-center space-y-6">
+            <img src="logo.png" alt="PRIME FARMS Ltd Logo" class="h-20 w-20 rounded-full border-2 border-blue-400 shadow-sm mx-auto" />
+            <form id="loginForm">
+                <h2 class="text-center text-xl font-bold text-blue-600 mb-4">Login to Your Account</h2>
                 <div class="input-group">
-                    <label for="email">Email</label>
-                    <input type="email" id="email" name="email" placeholder="Enter your email" required>
+                    <input type="email" id="email" name="email" placeholder="Email Address" required>
                 </div>
                 <div class="input-group">
-                    <label for="password">Password</label>
-                    <input type="password" id="password" name="password" placeholder="Enter your password" required>
+                    <input type="password" id="password" name="password" placeholder="Password" required>
                 </div>
-                <a href="#" class="forgot-password">Forgot Password?</a>
-                <button type="submit" class="login-button">Login</button>
-                <div class="signup-link">
-                    Don't have an account? <a href="#">Sign up</a>
-                </div>
+                <button type="submit" id="loginButton">Login</button>
+                <p id="loginMsg" class="mt-2 text-sm text-gray-600"></p>
             </form>
+            <div class="flex justify-between text-sm text-gray-600 mt-4">
+                <a href="#" class="hover:text-blue-600">Forgot Password?</a>
+                <a href="#" class="hover:text-blue-600">Sign up</a>
+            </div>
         </div>
     </main>
 
-    <footer class="text-center py-6 text-sm mt-8">
+    <footer class="bg-blue-900 w-full text-center py-6 text-sm text-white">
         &copy; 2025 PRIME FARMS Ltd. All rights reserved. | Powered by Aphrodice
     </footer>
 
     <script>
-        document.addEventListener("DOMContentLoaded", () => {
-            document.getElementById('hamburger').addEventListener('click', function() {
-                this.classList.toggle('open');
-                document.getElementById('mobileMenu').classList.toggle('hidden');
+        // Toggle Mobile Menu and Hamburger Animation
+        const hamburger = document.getElementById('hamburger');
+        const mobileMenu = document.getElementById('mobileMenu');
+        hamburger.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+            hamburger.classList.toggle('open');
+        });
+
+        // Password Toggle Functionality (Corrected)
+        const passwordInput = document.getElementById('password');  // Correct ID.
+        const togglePassword = document.getElementById('togglePassword'); // Correct ID.
+        const eyeIcon = document.getElementById('eyeIcon');
+
+        if (togglePassword) { // Check if the element exists
+            togglePassword.addEventListener('click', () => {
+                const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+                passwordInput.setAttribute('type', type);
+                if (eyeIcon) {
+                    eyeIcon.classList.toggle('fa-eye');
+                    eyeIcon.classList.toggle('fa-eye-slash');
+                }
             });
+        }
+
+
+        // Login Form Submission
+        const loginForm = document.getElementById('loginForm');
+        const loginButton = document.getElementById('loginButton');
+        const loginMessage = document.getElementById('loginMsg');
+
+        loginForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            loginButton.disabled = true;
+            loginButton.innerHTML = '<div class="loading-spinner"></div> Logging In...';
+            loginMessage.textContent = 'Please Wait! Redirecting...';
+
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+
+
+            // Simulate a successful login (replace with your actual login logic)
+            setTimeout(() => {
+                loginButton.disabled = false;
+                loginButton.innerHTML = 'Login';
+                loginMessage.textContent = 'Login successful!';
+                window.location.href = "accountant.html";
+            }, 2000);
+        });
+
+        // Optional: Add a function to handle Enter key for form submission
+        document.addEventListener("keydown", function(event) {
+            if (event.key === "Enter") {
+                loginForm.dispatchEvent(new Event('submit'));
+            }
         });
     </script>
 </body>
