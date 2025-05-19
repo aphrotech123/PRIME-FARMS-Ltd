@@ -455,21 +455,7 @@
                 document.getElementById('mobileMenu').classList.add('hidden');
             });
         });
-         // Kugenzura niba umukoresha yinjiye
-    const userEmail = localStorage.getItem("loggedInEmail");
-    const username = localStorage.getItem("username");
-
-    if (!userEmail) {
-      window.location.href = "login.html"; // Ohereza ku rupapuro rwo kwinjira
-    } else {
-      document.getElementById("username").textContent = username || "Umukoresha";
-    }
-
-    document.getElementById("logout-btn").addEventListener("click", function() {
-      localStorage.removeItem("loggedInEmail");
-      localStorage.removeItem("username");
-      window.location.href = "login.html";
-    });
+         
     </script>
     <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
